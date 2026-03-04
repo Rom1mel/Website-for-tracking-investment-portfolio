@@ -1,0 +1,49 @@
+
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Home - Investment Portfolio Tracker</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/general.css' %}">
+</head>
+<body>
+    <!-- Навигационное меню -->
+    <nav class="navbar">
+        <a href="/">Главная</a>
+        <a href="/assets/">активы</a>
+        <a href="/account/">аккаунт</a>
+    </nav>
+
+    <!-- Основной контент страницы -->
+    <div class="container">
+        <div class="header">
+            <h1>Добро пожаловать в Investment Portfolio Tracker</h1>
+            <p>Отслеживайте свои инвестиции в одном месте</p>
+        </div>
+
+        <!-- Пример контента для главной страницы -->
+        <div class="content-grid">
+            <div class="card">
+                <h3>Ваш портфель</h3>
+                <p>Общая стоимость: $0.00</p>
+                <p>Количество активов: 0</p>
+            </div>
+
+            <div class="card">
+                <h3>Последние изменения</h3>
+                <p>Нет активных транзакций</p>
+            </div>
+
+            <div class="card">
+                <h3>Рыночные новости</h3>
+                <p>Загрузка новостей...</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
