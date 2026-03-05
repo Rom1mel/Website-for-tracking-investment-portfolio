@@ -1,5 +1,4 @@
 
-{% load static %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,25 +8,21 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home - Investment Portfolio Tracker</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'main/css/general.css' %}">
+    <link rel="stylesheet" href=" {% static 'home/css/home.css' %}">
 </head>
 <body>
-    <!-- Навигационное меню -->
-    <nav class="navbar">
+    <nav class="navigation">
         <a href="/">Главная</a>
         <a href="/assets/">активы</a>
         <a href="/account/">аккаунт</a>
     </nav>
 
-    <!-- Основной контент страницы -->
-    <div class="container">
+    <div class="home">
         <div class="header">
-            <h1>Добро пожаловать в Investment Portfolio Tracker</h1>
+            <h1>Добро пожаловать в C&D Invest</h1>
             <p>Отслеживайте свои инвестиции в одном месте</p>
         </div>
-
-        <!-- Пример контента для главной страницы -->
-        <div class="content-grid">
+        <div class="info">
             <div class="card">
                 <h3>Ваш портфель</h3>
                 <p>Общая стоимость: $0.00</p>

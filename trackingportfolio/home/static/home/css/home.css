@@ -1,5 +1,4 @@
-/* Основной контент */
-.container {
+.home {
     max-width: 1200px;
     margin: 2rem auto;
     padding: 0 1rem;
@@ -19,9 +18,7 @@ h1 {
     color: #666;
     margin-top: 0.5rem;
 }
-
-/* Сетка с карточками */
-.content-grid {
+.info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
@@ -46,10 +43,4 @@ h1 {
     color: #666;
     line-height: 1.5;
     margin-bottom: 0.5rem;
-}
-
-/* Для будущих страниц */
-.page-title {
-    margin-bottom: 2rem;
-    color: #333;
 }
