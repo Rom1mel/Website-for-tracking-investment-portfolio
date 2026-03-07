@@ -13,8 +13,7 @@
 <body>
     <nav class="navigation">
         <a href="/">Главная</a>
-        <a href="/assets/">активы</a>
-        <a href="/account/">аккаунт</a>
+        <a href="/portfolio/">портфель</a>
     </nav>
 
     <div class="home">
@@ -24,7 +23,10 @@
         </div>
         <div class="info">
             <div class="card">
-                <h3>Ваш портфель</h3>
+                <h3><a href="{% url 'portfolio' %}" style="text-decoration: none; color: inherit;">
+                        Ваш портфель
+                    </a>
+                </h3>
                 <p>Общая стоимость: $0.00</p>
                 <p>Количество активов: 0</p>
             </div>
