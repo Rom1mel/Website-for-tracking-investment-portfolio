@@ -27,4 +27,5 @@ urlpatterns = [
     path('', include('home.urls')),
     path('portfolio/', include('portfolio.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('deals/', include('deals.urls')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
