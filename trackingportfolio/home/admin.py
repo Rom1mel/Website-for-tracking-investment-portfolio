@@ -1,3 +1,6 @@
 from django.contrib import admin
+from . models import *
 
-# Register your models here.
+@admin.register(Sessions)
+class SessionsAdmin(admin.ModelAdmin):
+    list_display = ('user', 'duration', 'time_stamp')
