@@ -82,6 +82,15 @@ DATABASES = {
     }
 }
 
+# Логин
+LOGIN_URL = '/accounts/login/'  # Неавторизованные
+
+
+LOGIN_REDIRECT_URL = '/'  # После авторизации
+
+# Куда перенаправлять после выхода
+LOGOUT_REDIRECT_URL = 'login'  # После выхода
+
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
