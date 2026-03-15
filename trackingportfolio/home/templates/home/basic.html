@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href=" {% static 'home/css/home.css' %}">
+</head>
+<body>
+    <nav class="navigation">
+        <a href="/">Главная</a>
+        <a href="/portfolio/">Портфель</a>
+        <a href="/deals/">История сделок</a>
+    </nav>
+    {% block main %}
+    {% endblock %}
+</body>
+</html>
