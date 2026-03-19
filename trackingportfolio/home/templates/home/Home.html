@@ -1,21 +1,6 @@
+{% extends 'home/basic.html' %}
 
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Home - Investment Portfolio Tracker</title>
-    {% load static %}
-    <link rel="stylesheet" href=" {% static 'home/css/home.css' %}">
-</head>
-<body>
-    <nav class="navigation">
-        <a href="/">Главная</a>
-        <a href="/portfolio/">портфель</a>
-    </nav>
-
+{% block main %}
     <div class="home">
         <div class="header">
             <h1>Добро пожаловать в C&D Invest</h1>
@@ -27,7 +12,7 @@
                         Ваш портфель
                     </a>
                 </h3>
-                <p>Общая стоимость: $0.00</p>
+                <p>Общая стоимость: $1.00</p>
                 <p>Количество активов: 0</p>
             </div>
 
@@ -42,5 +27,6 @@
             </div>
         </div>
     </div>
-</body>
-</html>
+{% endblock %}
+
+{% block title %}Главная страница{% endblock %}
