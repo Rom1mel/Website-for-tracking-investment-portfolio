@@ -8,4 +8,8 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 @admin.register(Asset)
 class AssetAdmin(admin.ModelAdmin):
-    list_display = ['ticker', 'name', 'count', 'portfolio']
+    list_display = ['ticker', 'name', 'type']
+
+@admin.register(PortfolioAsset)
+class PortfolioAssetAdmin(admin.ModelAdmin):
+    list_display = ['portfolio', 'asset', 'count', 'avg_purchase_price']
