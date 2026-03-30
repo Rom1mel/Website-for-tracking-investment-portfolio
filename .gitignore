@@ -1,2 +1,6 @@
-*.pyc
-trackingportfolio/deals/__pycache__/admin.cpython-314.pyc
+trackingportfolio/deals/__pycache__
+trackingportfolio/home/__pycache__
+trackingportfolio/portfolio/__pycache__
+trackingportfolio/trackingportfolio/__pycache__
+trackingportfolio/db.sqlite3
+.idea

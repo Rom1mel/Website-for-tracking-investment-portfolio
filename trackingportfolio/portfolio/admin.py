@@ -12,4 +12,4 @@ class AssetAdmin(admin.ModelAdmin):
 
 @admin.register(PortfolioAsset)
 class PortfolioAssetAdmin(admin.ModelAdmin):
-    list_display = ['portfolio', 'asset', 'count', 'avg_purchase_price']
+    list_display = ['portfolio', 'asset', 'count', 'price']

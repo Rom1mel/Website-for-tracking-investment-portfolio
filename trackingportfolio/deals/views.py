@@ -1,11 +1,13 @@
 from django.shortcuts import render
+from portfolio.forms import PortfolioAssetForm
 
 def history(request):
     return render(request, 'deals/history.html')
 
 def add(request):
-    return render(request, 'deals/add.html')
+    form = PortfolioAssetForm()
+    return render(request, 'deals/add.html', {'form': form})
 
-def edit(request):
+def edit(request): # ← добавить
     return render(request, 'deals/edit.html')
 

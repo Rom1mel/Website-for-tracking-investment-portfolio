@@ -9,7 +9,7 @@ class Portfolio(models.Model):
         return self.name
 
 class Asset(models.Model):
-    ticker = models.CharField(max_length=10)
+    ticker = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
     type = models.CharField(max_length=100, default='')
     def __str__(self):
@@ -19,7 +19,7 @@ class PortfolioAsset(models.Model):
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='portfolio')
     asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='asset')
     count = models.PositiveIntegerField()
-    avg_purchase_price = models.FloatField()
+    price = models.FloatField()
     class Meta:
         unique_together = ['portfolio', 'asset']
     def __str__(self):
