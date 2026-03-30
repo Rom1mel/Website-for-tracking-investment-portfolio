@@ -9,5 +9,15 @@
 </head>
 <body>
     <h1>Здесь вы можете добавить новые сделки</h1>
+    {% if form %}
+    <p>Форма существует</p>
+    {% else %}
+    <p>Форма не передана</p>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Добавить сделку</button>
+    </form>
 </body>
 </html>

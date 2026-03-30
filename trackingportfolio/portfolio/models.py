@@ -9,11 +9,18 @@ class Portfolio(models.Model):
         return self.name
 
 class Asset(models.Model):
-    ticker = models.CharField(max_length=10)
+    ticker = models.CharField(max_length=10, primary_key=True)
     name = models.CharField(max_length=100)
-    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='asset')
-    count = models.PositiveIntegerField()
-    purchase_price_per_unit = models.PositiveIntegerField()
-    time_stamp = models.DateTimeField(auto_now_add=True, editable=False)
+    type = models.CharField(max_length=100, default='')
     def __str__(self):
         return self.name
+
+class PortfolioAsset(models.Model):
+    portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='portfolio')
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE, related_name='asset')
+    count = models.PositiveIntegerField()
+    price = models.FloatField()
+    class Meta:
+        unique_together = ['portfolio', 'asset']
+    def __str__(self):
+        return self.portfolio
