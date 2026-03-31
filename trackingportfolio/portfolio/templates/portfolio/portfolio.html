@@ -3,6 +3,11 @@
 {% block main %}
     <h1>Это ваш портфель!</h1>
     <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
+    {% for asset in assets %}
+        <h3>{{ asset.asset.name }}</h3>
+        <p>{{ asset.count }}</p>
+        <p>{{ asset.price }}</p><br>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}Портфель{% endblock %}

@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from portfolio.forms import DealForm
-
 from portfolio.models import PortfolioAsset
+from .models import Deal
 
 
 def history(request):
-    return render(request, 'deals/history.html')
+    deals = Deal.objects.filter(portfolio__user=request.user)
+    return render(request, 'deals/history.html', {'deals': deals})
 
 def add(request):
     if request.method == 'POST':

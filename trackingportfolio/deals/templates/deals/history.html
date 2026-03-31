@@ -2,6 +2,14 @@
 
 {% block main %}
     <h1>История выших сделок</h1>
+    <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
+    {% for deal in deals %}
+        <h3>{{ deal.type }}</h3>
+        <p>{{ deal.type }}</p>
+        <p>{{ deal.asset.name }}</p>
+        <p>{{ deal.value }}</p>
+        <p>{{ deal.price_per_unit }}</p><br>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}История{% endblock %}
