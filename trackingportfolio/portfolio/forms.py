@@ -1,7 +1,14 @@
-from .models import PortfolioAsset
+from deals.models import Deal
 from django.forms import ModelForm
+from .models import Portfolio
 
-class PortfolioAssetForm(ModelForm):
+class DealForm(ModelForm):
     class Meta:
-        model = PortfolioAsset
-        fields = ['asset', 'count', 'price']
+        model = Deal
+        fields = ['type', 'portfolio', 'asset', 'value', 'price_per_unit']
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields["portfolio"].queryset = Portfolio.objects.filter(user=user)
