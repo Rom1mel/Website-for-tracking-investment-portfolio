@@ -2,6 +2,7 @@
 
 {% block main %}
     <h1>Это ваш портфель!</h1>
+    <a href="{% url 'create_portfolio' %}">Создать новый портфель</a>
     <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
     {% for asset in assets %}
         <h3>{{ asset.asset.name }}</h3>

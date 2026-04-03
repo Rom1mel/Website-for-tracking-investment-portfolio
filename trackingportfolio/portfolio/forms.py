@@ -12,3 +12,7 @@ class DealForm(ModelForm):
 
         if user:
             self.fields["portfolio"].queryset = Portfolio.objects.filter(user=user)
+class PortfolioForm(ModelForm):
+    class Meta:
+        model = Portfolio
+        fields = ['name', 'type']

@@ -2,7 +2,23 @@ from django.contrib.auth.models import User
 from django.db import models
 
 class Portfolio(models.Model):
+    MIXED = 'mixed'
+    CRYPTO = 'crypto'
+    STOCK_MARKET = 'stock_market'
+    STOCK_MARKET_RUS = 'stock_market_rus'
+    STOCK_MARKET_US = 'stock_market_us'
+    RAW_MATERIAL = 'raw_material'
+    TYPE_CHOICES = (
+        (MIXED, 'mixed'),
+        (CRYPTO, 'crypto'),
+        (STOCK_MARKET, 'stock_market'),
+        (STOCK_MARKET_RUS, 'stock_market_rus'),
+        (STOCK_MARKET_US, 'stock_market_us'),
+        (RAW_MATERIAL, 'raw_material'),
+    )
+
     name = models.CharField(max_length=100)
+    type = models.CharField(max_length=30, choices=TYPE_CHOICES, default=MIXED)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='portfolio')
     time_stamp = models.DateTimeField(auto_now_add=True, editable=False)
     def __str__(self):

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from portfolio.forms import DealForm
 from portfolio.models import PortfolioAsset
 from .models import Deal
+from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
 
 def history(request):
