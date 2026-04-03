@@ -18,9 +18,10 @@
     {% endfor %}
     </select>
     {% for asset in assets %}
-        <h3>{{ asset.asset.name }}</h3>
-        <p>{{ asset.count }}</p>
-        <p>{{ asset.price }}</p><br>
+        <h3>{{ asset.asset__name }}</h3>
+        <p>Количество: {{ asset.total_count }}</p>
+        <p>Средняя цена: {{ asset.avg_price }}</p>
+        <p>Общая стоимость: {{ asset.total_value }}</p>
     {% endfor %}
 {% endblock %}
 
