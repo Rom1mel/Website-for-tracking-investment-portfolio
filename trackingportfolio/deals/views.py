@@ -1,13 +1,20 @@
 from django.shortcuts import render, redirect
 from portfolio.forms import DealForm
-from portfolio.models import PortfolioAsset
+from portfolio.models import PortfolioAsset, Portfolio
 from .models import Deal
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
 
+
 def history(request):
-    deals = Deal.objects.filter(portfolio__user=request.user)
-    return render(request, 'deals/history.html', {'deals': deals})
+    portfolio_id = request.GET.get('portfolio_id', 'all')
+    if portfolio_id == 'all':
+        deals = Deal.objects.filter(portfolio__user=request.user)
+    else:
+        deals = Deal.objects.filter(portfolio_id=portfolio_id, portfolio__user=request.user)
+    portfolios = Portfolio.objects.filter(user=request.user)
+    data = {'deals': deals, 'portfolios': portfolios, 'selected': portfolio_id}
+    return render(request, 'deals/history.html', data)
 
 def add(request):
     if request.method == 'POST':

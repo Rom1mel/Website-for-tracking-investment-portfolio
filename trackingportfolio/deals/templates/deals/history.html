@@ -3,6 +3,18 @@
 {% block main %}
     <h1>История выших сделок</h1>
     <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
+    <select onchange="location = this.value">
+        <option value="/deals/?portfolio_id=all"
+        {% if selected == 'all' %}selected{% endif %}>
+        Все портфели
+        </option>
+        {% for p in portfolios %}
+        <option value="/deals/?portfolio_id={{ p.id }}"
+            {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
+            {{ p.name }}
+        </option>
+    {% endfor %}
+    </select>
     {% for deal in deals %}
         <h3>{{ deal.type }}</h3>
         <p>{{ deal.type }}</p>

@@ -4,6 +4,19 @@
     <h1>Это ваш портфель!</h1>
     <a href="{% url 'create_portfolio' %}">Создать новый портфель</a>
     <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
+    <select onchange="location = this.value;">
+    <option value="/portfolio/?portfolio_id=all"
+        {% if selected == 'all' %}selected{% endif %}>
+        Все портфели
+    </option>
+
+    {% for p in portfolios %}
+        <option value="/portfolio/?portfolio_id={{ p.id }}"
+            {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
+            {{ p.name }}
+        </option>
+    {% endfor %}
+    </select>
     {% for asset in assets %}
         <h3>{{ asset.asset.name }}</h3>
         <p>{{ asset.count }}</p>

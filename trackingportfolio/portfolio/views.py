@@ -3,8 +3,16 @@ from .models import PortfolioAsset, Portfolio
 from .forms import PortfolioForm
 
 def portfolio(request):
-    assets = PortfolioAsset.objects.filter(portfolio__user=request.user)
-    return render(request, 'portfolio/portfolio.html', {'assets': assets})
+    portfolio_id = request.GET.get('portfolio_id', 'all')
+    if portfolio_id == 'all':
+        assets = PortfolioAsset.objects.filter(portfolio__user=request.user)
+    else:
+        assets = PortfolioAsset.objects.filter(portfolio_id=portfolio_id, portfolio__user=request.user)
+    portfolios = Portfolio.objects.filter(user=request.user)
+    data = {'assets': assets,
+        'portfolios': portfolios,
+        'selected': portfolio_id}
+    return render(request, 'portfolio/portfolio.html', data)
 
 def create_portfolio(request):
     if request.method == 'POST':
