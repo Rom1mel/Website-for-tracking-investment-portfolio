@@ -8,8 +8,10 @@ class PortfolioAdmin(admin.ModelAdmin):
 
 @admin.register(Asset)
 class AssetAdmin(admin.ModelAdmin):
+    search_fields = ['name', 'ticker']
     list_display = ['ticker', 'name', 'type']
 
 @admin.register(PortfolioAsset)
 class PortfolioAssetAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['asset']
     list_display = ['portfolio', 'asset', 'count', 'price']

@@ -17,8 +17,9 @@ def history(request):
     return render(request, 'deals/history.html', data)
 
 def add(request):
+    show_all = request.GET.get('all') == '1'
     if request.method == 'POST':
-        form = DealForm(request.POST, user = request.user)
+        form = DealForm(request.POST, user = request.user, show_all = show_all)
         if form.is_valid():
             deal = form.save(commit=False)
             portfolio = deal.portfolio
@@ -54,8 +55,8 @@ def add(request):
 
         return redirect('history')
     else:
-        form = DealForm(user = request.user)
-        return render(request, 'deals/add.html', {'form': form})
+        form = DealForm(user = request.user, show_all = show_all)
+        return render(request, 'deals/add.html', {'form': form, 'show_all': show_all})
 
 def edit(request): # ← добавить
     return render(request, 'deals/edit.html')

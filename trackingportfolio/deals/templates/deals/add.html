@@ -9,7 +9,9 @@
 </head>
 <body>
     <h1>Здесь вы можете добавить новые сделки</h1>
-    <form method="post">
+    <a href="?all=1">Показать все активы</a>
+    <a href="?">Показать только популярные</a>
+    <form method="post" action="?{% if show_all %}all=1{% endif %}">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Добавить сделку</button>
