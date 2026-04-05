@@ -1,27 +1,37 @@
 from django.shortcuts import render, redirect
-from .models import PortfolioAsset, Portfolio
+from .models import PortfolioAsset, Portfolio, Price
 from .forms import PortfolioForm
-from django.db.models import Sum, F, FloatField, ExpressionWrapper
+from django.db.models import Sum, F, FloatField, ExpressionWrapper, OuterRef, Subquery
 
 def portfolio(request):
     portfolio_id = request.GET.get('portfolio_id', 'all')
-    if portfolio_id == 'all':
+    if portfolio_id == 'all': #Если выбраны все портфели
+        latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1] #Подзапрос для получения цены
         assets = (PortfolioAsset.objects.
             filter(portfolio__user=request.user).values('asset__name').
             annotate(total_count = Sum('count'), total_value =Sum(F('count')*F('price'))).
             annotate(avg_price=ExpressionWrapper(
                 F('total_value') / F('total_count'),
-                output_field=FloatField())))
-    else:
+                output_field=FloatField())).
+            annotate(total_price = Subquery(latest_price) * F('total_count'),
+                     profit=F('total_price') - F('total_value'),))
+        total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
+
+    else: #Если выбран конкретный портфель
+        latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1]  # Подзапрос для получения цены
         assets = (PortfolioAsset.objects.
             filter(portfolio_id=portfolio_id, portfolio__user=request.user).values('asset__name').
-            annotate(total_count = Sum('count'), total_value =Sum('price')).
+            annotate(total_count = Sum('count'), total_value =Sum(F('count') * F('price'))).
             annotate(avg_price=ExpressionWrapper(F('total_value') / F('total_count'),
-                 output_field=FloatField())))
+                 output_field=FloatField())).
+            annotate(total_price = Subquery(latest_price) * F('total_count'),
+                     profit=F('total_price') - F('total_value'),))
+        total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
     portfolios = Portfolio.objects.filter(user=request.user)
     data = {'assets': assets,
         'portfolios': portfolios,
-        'selected': portfolio_id}
+        'selected': portfolio_id,
+        'total_profit': total_profit}
     return render(request, 'portfolio/portfolio.html', data)
 
 def create_portfolio(request):

@@ -33,5 +33,4 @@ class Command(BaseCommand):
                 top_ids.append(coin["id"])
             time.sleep(2)
 
-        # 🔥 обновляем топ
         Asset.objects.filter(external_id__in=top_ids).update(type='top_crypto')

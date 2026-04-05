@@ -15,3 +15,7 @@ class AssetAdmin(admin.ModelAdmin):
 class PortfolioAssetAdmin(admin.ModelAdmin):
     autocomplete_fields = ['asset']
     list_display = ['portfolio', 'asset', 'count', 'price']
+
+@admin.register(Price)
+class PriceAdmin(admin.ModelAdmin):
+    list_display = ['asset', 'price', 'market_cap']

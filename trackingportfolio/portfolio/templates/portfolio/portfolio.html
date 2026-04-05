@@ -17,11 +17,14 @@
         </option>
     {% endfor %}
     </select>
+    <h2>Общая прибыль: {{ total_profit }} рублей</h2>
     {% for asset in assets %}
         <h3>{{ asset.asset__name }}</h3>
         <p>Количество: {{ asset.total_count }}</p>
-        <p>Средняя цена: {{ asset.avg_price }}</p>
-        <p>Общая стоимость: {{ asset.total_value }}</p>
+        <p>Средняя цена покупки: {{ asset.avg_price }} рублей</p>
+        <p>Общая цена покупки: {{ asset.total_value }} рублей</p>
+        <p>Общая стоимость: {{ asset.total_price }} рублей</p>
+        <p>Прибыль: {{ asset.profit }} рублей</p>
     {% endfor %}
 {% endblock %}
 
