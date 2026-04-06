@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from portfolio.forms import DealForm
 from portfolio.models import PortfolioAsset, Portfolio
 from .models import Deal
+from deals.services.deal_service import new_deal, update_deal, delete_deal
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 
 
@@ -22,42 +23,28 @@ def add(request):
         form = DealForm(request.POST, user = request.user, show_all = show_all)
         if form.is_valid():
             deal = form.save(commit=False)
-            portfolio = deal.portfolio
-            asset = deal.asset
-            count = deal.value
-            price = deal.price_per_unit
-            operation = deal.type
-            asset_exsists = PortfolioAsset.objects.filter(portfolio = portfolio, asset = asset).first()
-            error = False
-            if asset_exsists:
-                if operation == 'buy':
-                    asset_exsists.price = (asset_exsists.price * asset_exsists.count + count * price)/(asset_exsists.count + count)
-                    asset_exsists.count += count
-                    asset_exsists.save()
-                elif operation == 'sell' and count <= asset_exsists.count:
-                    asset_exsists.count -= count
-                    if asset_exsists.count == 0:
-                        asset_exsists.delete()
-                    else:
-                        asset_exsists.save()
-                else:
-                    form.add_error(None, "Ошибка продажи")
-                    error = True
-
-            else:
-                if operation == 'buy':
-                    PortfolioAsset.objects.create(portfolio = portfolio, asset = asset, count = count, price = price)
-                else:
-                    form.add_error(None, "Ошибка продажи")
-                    error = True
-            if not error:
-                deal.save()
-
+            new_deal(deal, True)
         return redirect('history')
     else:
         form = DealForm(user = request.user, show_all = show_all)
         return render(request, 'deals/add.html', {'form': form, 'show_all': show_all})
 
-def edit(request): # ← добавить
-    return render(request, 'deals/edit.html')
+def edit(request, pk):
+    deal = Deal.objects.get(id = pk,portfolio__user = request.user)
+    if request.method == 'POST':
+        form = DealForm(request.POST, instance=deal)
+        if form.is_valid():
+            deal = form.save(commit=False)
+            update_deal(deal,pk)
+        return redirect('history')
+    else:
+        form = DealForm(instance = deal)
+        return render(request, 'deals/edit.html', {'form': form})
 
+def delete(request, pk):
+    deal = Deal.objects.get(id = pk,portfolio__user = request.user)
+    if request.method == 'POST':
+        delete_deal(pk)
+        return redirect('history')
+    else:
+        return render(request, 'deals/delete.html', {'deal': deal})

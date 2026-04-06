@@ -21,6 +21,12 @@
         <p>{{ deal.asset.name }}</p>
         <p>{{ deal.value }}</p>
         <p>{{ deal.price_per_unit }}</p><br>
+        <a href="{% url 'edit' deal.id %}">
+            Изменить
+        </a>
+        <a href="{% url 'delete' deal.id %}">
+            Удалить
+        </a>
     {% endfor %}
 {% endblock %}
 
