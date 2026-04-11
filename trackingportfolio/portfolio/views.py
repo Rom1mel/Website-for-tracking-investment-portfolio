@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
-from .models import PortfolioAsset, Portfolio, Price
+from .models import PortfolioAsset, Portfolio, Price, Asset
 from .forms import PortfolioForm
 from django.db.models import Sum, F, FloatField, ExpressionWrapper, OuterRef, Subquery
+from deals.models import Deal
+
 
 def portfolio(request):
     portfolio_id = request.GET.get('portfolio_id', 'all')
     if portfolio_id == 'all': #Если выбраны все портфели
         latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1] #Подзапрос для получения цены
         assets = (PortfolioAsset.objects.
-            filter(portfolio__user=request.user).values('asset__name').
+            filter(portfolio__user=request.user).values('asset__name', 'asset_id', 'portfolio_id').
             annotate(total_count = Sum('count'), total_value =Sum(F('count')*F('price'))).
             annotate(avg_price=ExpressionWrapper(
                 F('total_value') / F('total_count'),
@@ -20,7 +22,7 @@ def portfolio(request):
     else: #Если выбран конкретный портфель
         latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1]  # Подзапрос для получения цены
         assets = (PortfolioAsset.objects.
-            filter(portfolio_id=portfolio_id, portfolio__user=request.user).values('asset__name').
+            filter(portfolio_id=portfolio_id, portfolio__user=request.user).values('asset__name', 'asset_id', 'portfolio_id').
             annotate(total_count = Sum('count'), total_value =Sum(F('count') * F('price'))).
             annotate(avg_price=ExpressionWrapper(F('total_value') / F('total_count'),
                  output_field=FloatField())).
@@ -47,3 +49,9 @@ def create_portfolio(request):
     else:
         form = PortfolioForm()
         return render(request, 'portfolio/create_portfolio.html', {'form': form})
+def detail(request, portfolio_id, asset_id):
+    deals = Deal.objects.filter(asset_id=asset_id, portfolio_id=portfolio_id, portfolio__user=request.user)
+    asset = Asset.objects.get(id=asset_id)
+    return render(request, 'portfolio/detail.html', {'deals': deals,
+                                                     'portfolio_id': portfolio_id, 'asset_id': asset_id,
+                                                     'asset': asset})

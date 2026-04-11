@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Detail</title>
+</head>
+<body>
+    <h1>История сделок по активу {{ asset }}.</h1>
+
+    {% for deal in deals %}
+        <p>{{ deal.type }}</p>
+        <p>{{ deal.value }}</p>
+        <p>{{ deal.price_per_unit }}</p>
+        <p>{{ deal.time_stamp }}</p>
+        <a href="{% url 'edit' deal.id %}">Редактировать</a>
+        <a href="{% url 'delete' deal.id %}">Удалить</a>
+        <hr>
+    {% endfor %}
+
+<a href="{% url 'portfolio' %}">Назад к портфелю</a>
+</body>
+</html>

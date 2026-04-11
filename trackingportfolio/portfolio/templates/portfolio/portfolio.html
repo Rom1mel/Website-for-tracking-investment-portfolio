@@ -25,6 +25,9 @@
         <p>Общая цена покупки: {{ asset.total_value }} рублей</p>
         <p>Общая стоимость: {{ asset.total_price }} рублей</p>
         <p>Прибыль: {{ asset.profit }} рублей</p>
+        <a href="{% url 'detail' asset.asset_id asset.portfolio_id %}">
+            Подробнее
+        </a>
     {% endfor %}
 {% endblock %}
 
