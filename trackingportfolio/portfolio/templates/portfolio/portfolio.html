@@ -18,6 +18,7 @@
     {% endfor %}
     </select>
     <h2>Общая прибыль: {{ total_profit }} рублей</h2>
+    <h2>Баланс: {{ balance }}</h2>
     {% for asset in assets %}
         <h3>{{ asset.asset__name }}</h3>
         <p>Количество: {{ asset.total_count }}</p>

@@ -9,15 +9,15 @@
         Все портфели
         </option>
         {% for p in portfolios %}
-        <option value="/deals/?portfolio_id={{ p.id }}"
-            {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
-            {{ p.name }}
-        </option>
-    {% endfor %}
+            <option value="/deals/?portfolio_id={{ p.id }}"
+                {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
+                {{ p.name }}
+            </option>
+        {% endfor %}
     </select>
+    <a href="{% url 'add_payment' %}">Нажмите, чтобы добавить начисления.</a>
     {% for deal in deals %}
         <h3>{{ deal.type }}</h3>
-        <p>{{ deal.type }}</p>
         <p>{{ deal.asset.name }}</p>
         <p>{{ deal.value }}</p>
         <p>{{ deal.price_per_unit }}</p><br>
@@ -25,6 +25,14 @@
             Изменить
         </a>
         <a href="{% url 'delete' deal.id %}">
+            Удалить
+        </a>
+    {% endfor %}
+    {% for payment in payments %}
+        <h3>{{ payment.type }}</h3>
+        <p>{{ payment.asset.name }}</p>
+        <p>{{ payment.value }}</p>
+        <a href="{% url 'delete_payment' payment.id %}">
             Удалить
         </a>
     {% endfor %}

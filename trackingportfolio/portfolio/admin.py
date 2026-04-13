@@ -4,7 +4,7 @@ from . models import *
 
 @admin.register(Portfolio)
 class PortfolioAdmin(admin.ModelAdmin):
-    list_display = ['name', 'user', 'time_stamp']
+    list_display = ['name', 'user', 'balance' ,'time_stamp']
 
 @admin.register(Asset)
 class AssetAdmin(admin.ModelAdmin):

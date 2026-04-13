@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Удалить начисление</title>
+</head>
+<body>
+    <h2>Вы уверены, что хотите удалить начисление?</h2>
+    <p>Тип: {{ payment.type }}</p>
+    <p>Портфель: {{ payment.portfolio }}</p>
+    <p>По активу: {{ payment.asset }}</p>
+    <p>Сумма: {{ payment.value }}</p>
+    <p>Время: {{ payment.time_stamp }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+    </form>
+    <a href="{% url 'history' %}">
+        <button type="button">Нет</button>
+    </a>
+</body>
+</html>

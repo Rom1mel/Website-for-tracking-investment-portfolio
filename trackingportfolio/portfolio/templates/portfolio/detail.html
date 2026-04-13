@@ -8,7 +8,7 @@
     <title>Detail</title>
 </head>
 <body>
-    <h1>История сделок по активу {{ asset }}.</h1>
+    <h1>История сделок и начислений по активу {{ asset }}.</h1>
 
     {% for deal in deals %}
         <p>{{ deal.type }}</p>
@@ -17,6 +17,13 @@
         <p>{{ deal.time_stamp }}</p>
         <a href="{% url 'edit' deal.id %}">Редактировать</a>
         <a href="{% url 'delete' deal.id %}">Удалить</a>
+        <hr>
+    {% endfor %}
+    {% for payment in payments %}
+        <p>{{ payment.type }}</p>
+        <p>{{ payment.value }}</p>
+        <p>{{ payment.time_stamp }}</p>
+        <a href="{% url 'delete_payment' payment.id %}">Удалить</a>
         <hr>
     {% endfor %}
 

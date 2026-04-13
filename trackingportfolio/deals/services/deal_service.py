@@ -1,6 +1,6 @@
 from django.db import transaction
 from deals.models import Deal
-from portfolio.models import PortfolioAsset
+from portfolio.models import PortfolioAsset, Portfolio
 from django.core.exceptions import ValidationError
 
 @transaction.atomic
@@ -14,11 +14,15 @@ def new_deal(deal, is_save):
     error = False
     if asset_exsists:
         if operation == 'buy':
+            if count * price > portfolio.balance:
+                raise ValidationError('Недостаточно баланся для покупки')
+            portfolio.balance -= count * price
             asset_exsists.price = (asset_exsists.price * asset_exsists.count + count * price) / (
                         asset_exsists.count + count)
             asset_exsists.count += count
             asset_exsists.save()
         elif operation == 'sell' and count <= asset_exsists.count:
+            portfolio.balance += count * price
             asset_exsists.count -= count
             if asset_exsists.count == 0:
                 asset_exsists.delete()
@@ -29,10 +33,14 @@ def new_deal(deal, is_save):
             raise ValidationError("Недостаточно актива для продажи")
     else:
         if operation == 'buy':
+            if count * price > portfolio.balance:
+                raise ValidationError('Недостаточно баланся для покупки')
+            portfolio.balance -= count * price
             PortfolioAsset.objects.create(portfolio=portfolio, asset=asset, count=count, price=price)
         else:
             error = True
             raise ValidationError("Недостаточно актива для продажи")
+    portfolio.save()
     if is_save:
         deal.save()
 

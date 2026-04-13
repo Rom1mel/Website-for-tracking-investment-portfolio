@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .models import PortfolioAsset, Portfolio, Price, Asset
 from .forms import PortfolioForm
 from django.db.models import Sum, F, FloatField, ExpressionWrapper, OuterRef, Subquery
-from deals.models import Deal
+from deals.models import Deal, Payment
 
 
 def portfolio(request):
@@ -18,6 +18,8 @@ def portfolio(request):
             annotate(total_price = Subquery(latest_price) * F('total_count'),
                      profit=F('total_price') - F('total_value'),))
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
+        selected_portfolios = Portfolio.objects.filter(user=request.user)
+        balance = selected_portfolios.aggregate(total_balance=Sum('balance'))['total_balance'] or 0
 
     else: #Если выбран конкретный портфель
         latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1]  # Подзапрос для получения цены
@@ -29,11 +31,14 @@ def portfolio(request):
             annotate(total_price = Subquery(latest_price) * F('total_count'),
                      profit=F('total_price') - F('total_value'),))
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
+        balance = (Portfolio.objects.get(id=portfolio_id)).balance
+
     portfolios = Portfolio.objects.filter(user=request.user)
     data = {'assets': assets,
         'portfolios': portfolios,
         'selected': portfolio_id,
-        'total_profit': total_profit}
+        'total_profit': total_profit,
+        'balance': balance}
     return render(request, 'portfolio/portfolio.html', data)
 
 def create_portfolio(request):
@@ -52,6 +57,6 @@ def create_portfolio(request):
 def detail(request, portfolio_id, asset_id):
     deals = Deal.objects.filter(asset_id=asset_id, portfolio_id=portfolio_id, portfolio__user=request.user)
     asset = Asset.objects.get(id=asset_id)
-    return render(request, 'portfolio/detail.html', {'deals': deals,
-                                                     'portfolio_id': portfolio_id, 'asset_id': asset_id,
-                                                     'asset': asset})
+    payments = Payment.objects.filter(asset_id=asset_id, portfolio_id=portfolio_id, portfolio__user=request.user)
+    data = {'deals': deals, 'portfolio_id': portfolio_id, 'asset_id': asset_id, 'asset': asset, 'payments': payments}
+    return render(request, 'portfolio/detail.html', data)
