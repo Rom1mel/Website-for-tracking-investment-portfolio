@@ -5,14 +5,14 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add Operation</title>
+    <title>Добавить поплнение</title>
 </head>
 <body>
-    <h1>Здесь вы можете добавить новые начисления</h1>
+    <h1>Здесь вы можете добавить новые пополнения</h1>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Добавить начисление</button>
+        <button type="submit">Добавить пополнение</button>
     </form>
 </body>
 </html>

@@ -4,6 +4,7 @@ from portfolio.models import PortfolioAsset, Portfolio
 from .models import Deal, Payment
 from deals.services.deal_service import new_deal, update_deal, delete_deal
 from deals.services.payment_service import new_payment, delete_payment_service
+from deals.services.receipt_service import new_receipt, delete_receipt_service
 from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
 from .forms import *
 from django.core.exceptions import ValidationError
@@ -15,11 +16,13 @@ def history(request):
     if portfolio_id == 'all':
         deals = Deal.objects.filter(portfolio__user=request.user)
         payments = Payment.objects.filter(portfolio__user=request.user)
+        receipts = Receipt.objects.filter(portfolio__user=request.user)
     else:
         deals = Deal.objects.filter(portfolio_id=portfolio_id, portfolio__user=request.user)
         payments = Payment.objects.filter(portfolio_id=portfolio_id, portfolio__user=request.user)
+        receipts = Receipt.objects.filter(portfolio_id=portfolio_id, portfolio__user=request.user)
     portfolios = Portfolio.objects.filter(user=request.user)
-    data = {'deals': deals, 'portfolios': portfolios, 'selected': portfolio_id, 'payments': payments}
+    data = {'deals': deals, 'portfolios': portfolios, 'selected': portfolio_id, 'payments': payments, 'receipts': receipts}
     return render(request, 'deals/history.html', data)
 
 def add(request):
@@ -72,3 +75,21 @@ def delete_payment(request, pk):
         return redirect('history')
     else:
         return render(request, 'deals/delete_payment.html', {'payment': payment})
+
+def add_receipt(request):
+    if request.method == 'POST':
+        form = ReceiptForm(request.POST)
+        if form.is_valid():
+            receipt = form.save(commit=False)
+            new_receipt(receipt)
+        return redirect('history')
+    else:
+        form = ReceiptForm()
+        return render(request, 'deals/add_receipt.html', {'form': form})
+def delete_receipt(request, pk):
+    receipt = Receipt.objects.get(id = pk)
+    if request.method == 'POST':
+        delete_receipt_service(pk)
+        return redirect('history')
+    else:
+        return render(request, 'deals/delete_receipt.html', {'receipt': receipt})

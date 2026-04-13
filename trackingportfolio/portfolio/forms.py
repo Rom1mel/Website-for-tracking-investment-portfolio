@@ -18,6 +18,13 @@ class DealForm(ModelForm):
             self.fields["asset"].queryset = Asset.objects.all()
         else:
             self.fields["asset"].queryset = Asset.objects.filter(type='top_crypto')
+        if self.instance and self.instance.pk:
+            self.fields['portfolio'].disabled = True
+
+    def clean_portfolio(self):
+        if self.instance and self.instance.pk:
+            return self.instance.portfolio
+        return self.cleaned_data.get('portfolio')
 
 class PortfolioForm(ModelForm):
     class Meta:

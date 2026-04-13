@@ -3,6 +3,7 @@ from .models import PortfolioAsset, Portfolio, Price, Asset
 from .forms import PortfolioForm
 from django.db.models import Sum, F, FloatField, ExpressionWrapper, OuterRef, Subquery
 from deals.models import Deal, Payment
+from portfolio.services.profit_service import culculate_profit
 
 
 def portfolio(request):
@@ -20,6 +21,10 @@ def portfolio(request):
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
         selected_portfolios = Portfolio.objects.filter(user=request.user)
         balance = selected_portfolios.aggregate(total_balance=Sum('balance'))['total_balance'] or 0
+        portfolios = Portfolio.objects.filter(user=request.user)
+        profit = 0
+        for portfolio_user in portfolios:
+            profit += culculate_profit(portfolio_user.id)
 
     else: #Если выбран конкретный портфель
         latest_price = Price.objects.filter(asset=OuterRef('asset')).values('price')[:1]  # Подзапрос для получения цены
@@ -32,13 +37,15 @@ def portfolio(request):
                      profit=F('total_price') - F('total_value'),))
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
         balance = (Portfolio.objects.get(id=portfolio_id)).balance
+        profit = culculate_profit(portfolio_id)
 
     portfolios = Portfolio.objects.filter(user=request.user)
     data = {'assets': assets,
         'portfolios': portfolios,
         'selected': portfolio_id,
         'total_profit': total_profit,
-        'balance': balance}
+        'balance': balance,
+        'profit': profit}
     return render(request, 'portfolio/portfolio.html', data)
 
 def create_portfolio(request):

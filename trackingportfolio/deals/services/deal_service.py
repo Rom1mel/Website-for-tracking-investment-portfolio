@@ -54,17 +54,20 @@ def recalculate_portfolio(portfolio):
 @transaction.atomic
 def update_deal(deal, pk):
     old_deal = Deal.objects.get(pk=pk)
-    old_deal.value = deal.value
-    old_deal.price_per_unit = deal.price_per_unit
-    old_deal.type = deal.type
-    old_deal.asset = deal.asset
-
-    old_deal.save()
-    recalculate_portfolio(old_deal.portfolio)
+    delete_deal(old_deal.id)
+    new_deal(deal, True)
 
 @transaction.atomic
 def delete_deal(pk):
     deal = Deal.objects.get(pk=pk)
     deal_portfolio = deal.portfolio
+    if deal.type == 'buy':
+        deal_portfolio.balance += deal.value * deal.price_per_unit
+    else:
+        if deal_portfolio.balance < deal.value * deal.price_per_unit:
+            raise ValidationError('Баланс станет отрицательным при этом действии')
+        else:
+            deal_portfolio.balance -= deal.value * deal.price_per_unit
     deal.delete()
+    deal_portfolio.save()
     recalculate_portfolio(deal_portfolio)

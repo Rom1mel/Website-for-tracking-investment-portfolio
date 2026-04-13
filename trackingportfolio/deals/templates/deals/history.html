@@ -16,6 +16,7 @@
         {% endfor %}
     </select>
     <a href="{% url 'add_payment' %}">Нажмите, чтобы добавить начисления.</a>
+    <a href="{% url 'add_receipt' %}">Нажмите, чтобы добавить пополнения.</a>
     {% for deal in deals %}
         <h3>{{ deal.type }}</h3>
         <p>{{ deal.asset.name }}</p>
@@ -33,6 +34,13 @@
         <p>{{ payment.asset.name }}</p>
         <p>{{ payment.value }}</p>
         <a href="{% url 'delete_payment' payment.id %}">
+            Удалить
+        </a>
+    {% endfor %}
+    {% for receipt in receipts %}
+        <h3>{{ receipt.type }}</h3>
+        <p>{{ receipt.value }}</p>
+        <a href="{% url 'delete_receipt' receipt.id %}">
             Удалить
         </a>
     {% endfor %}

@@ -4,18 +4,10 @@ from portfolio.models import Asset, Portfolio
 class Deal(models.Model):
     BUY = 'buy'
     SELL = 'sell'
-    ACCRUAL = 'accrual'
-    DEBIT = 'debit'
-    ADD = 'add'
-    WITHDRAW = 'withdraw'
 
     TYPE_CHOICES = [
         (BUY, 'Покупка'),
         (SELL, 'Продажа'),
-        (ACCRUAL, 'Начисление'),
-        (DEBIT, 'Списание'),
-        (ADD, 'Пополнение'),
-        (WITHDRAW, 'Вывод')
     ]
     type = models.CharField(max_length=50, choices=TYPE_CHOICES, default=BUY)
     portfolio = models.ForeignKey(Portfolio, on_delete=models.CASCADE, related_name='transaction')

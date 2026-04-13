@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Удалить пополнение</title>
+</head>
+<body>
+    <h2>Вы уверены, что хотите удалить пополнение?</h2>
+    <p>Тип: {{ receipt.type }}</p>
+    <p>Портфель: {{ receipt.portfolio }}</p>
+    <p>Сумма: {{ receipt.value }}</p>
+    <p>Время: {{ receipt.time_stamp }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+    </form>
+    <a href="{% url 'history' %}">
+        <button type="button">Нет</button>
+    </a>
+</body>
+</html>

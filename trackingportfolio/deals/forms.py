@@ -23,3 +23,8 @@ class PaymentForm(ModelForm):
             if not asset_in_portfolio:
                 raise ValidationError("Актив не принадлежит выбранному портфелю")
         return cleaned_data
+
+class ReceiptForm(ModelForm):
+    class Meta:
+        model = Receipt
+        fields = ['type', 'portfolio', 'value']
