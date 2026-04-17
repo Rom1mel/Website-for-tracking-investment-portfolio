@@ -1,6 +1,10 @@
 trackingportfolio/deals/__pycache__
+trackingportfolio/deals/migrations__pycache__
+trackingportfolio/deals/services__pycache__
 trackingportfolio/home/__pycache__
+trackingportfolio/home/migrations__pycache__
 trackingportfolio/portfolio/__pycache__
+trackingportfolio/portfolio/migrations__pycache__
 trackingportfolio/trackingportfolio/__pycache__
 trackingportfolio/db.sqlite3
 .idea
