@@ -3,7 +3,7 @@ from .models import PortfolioAsset, Portfolio, Price, Asset
 from .forms import PortfolioForm
 from django.db.models import Sum, F, FloatField, ExpressionWrapper, OuterRef, Subquery
 from deals.models import Deal, Payment
-from portfolio.services.profit_service import culculate_profit
+from portfolio.services.profit_service import culculate_profit, culculate_asset_profit
 
 
 def portfolio(request):
@@ -17,8 +17,11 @@ def portfolio(request):
                 F('total_value') / F('total_count'),
                 output_field=FloatField())).
             annotate(total_price = Subquery(latest_price) * F('total_count'),
-                     profit=F('total_price') - F('total_value'),))
+                     profit=F('total_price') - F('total_value')))
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
+        assets = list(assets)
+        for asset in assets: #Добавление поля с полный прибылью каждого актива после запроса к бд
+            asset['profit_asset'] = culculate_asset_profit(asset['portfolio_id'], asset['asset_id'])
         selected_portfolios = Portfolio.objects.filter(user=request.user)
         balance = selected_portfolios.aggregate(total_balance=Sum('balance'))['total_balance'] or 0
         portfolios = Portfolio.objects.filter(user=request.user)
@@ -35,7 +38,11 @@ def portfolio(request):
                  output_field=FloatField())).
             annotate(total_price = Subquery(latest_price) * F('total_count'),
                      profit=F('total_price') - F('total_value'),))
+
         total_profit = assets.aggregate(total_profit=Sum('profit'))['total_profit'] or 0
+        assets = list(assets)
+        for asset in assets: #Добавление поля с полный прибылью каждого актива после запроса к бд
+            asset['profit_asset'] = culculate_asset_profit(asset['portfolio_id'], asset['asset_id'])
         balance = (Portfolio.objects.get(id=portfolio_id)).balance
         profit = culculate_profit(portfolio_id)
 

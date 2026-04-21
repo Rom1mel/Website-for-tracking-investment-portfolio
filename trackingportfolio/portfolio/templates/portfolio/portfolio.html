@@ -84,7 +84,10 @@
                     <span>Общая покупка: {{ asset.total_value|floatformat:2 }} ₽</span>
                     <span>Текущая стоимость: {{ asset.total_price|floatformat:2 }} ₽</span>
                     <span class="{% if asset.profit >= 0 %}profit-plus{% else %}profit-minus{% endif %}">
-                        Прибыль: {% if asset.profit >= 0 %}+{% endif %}{{ asset.profit|floatformat:2 }} ₽
+                        Нереализованная прибыль: {% if asset.profit >= 0 %}+{% endif %}{{ asset.profit|floatformat:2 }} ₽
+                    </span>
+                    <span class="{% if asset.profit_asset >= 0 %}profit-plus{% else %}profit-minus{% endif %}">
+                        Общая прибыль: {% if asset.profit_asset >= 0 %}+{% endif %}{{ asset.profit_asset|floatformat:2 }} ₽
                     </span>
                     <a href="{% url 'detail' asset.asset_id asset.portfolio_id %}" class="cd-detail-link">Подробнее →</a>
                 </div>
