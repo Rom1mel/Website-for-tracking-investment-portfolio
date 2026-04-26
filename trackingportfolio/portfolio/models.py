@@ -44,7 +44,7 @@ class PortfolioAsset(models.Model):
         return str(self.portfolio)
 
 class Price(models.Model):
-    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    asset = models.OneToOneField(Asset, on_delete=models.CASCADE)
     price = models.FloatField(default=0)
     market_cap = models.FloatField(default=0)
     def __str__(self):

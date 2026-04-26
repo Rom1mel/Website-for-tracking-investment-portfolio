@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from  portfolio.models import Price, Asset
 
 # Create your views here.
 

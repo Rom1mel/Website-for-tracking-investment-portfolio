@@ -1,11 +1,11 @@
 import requests
+import time
 from django.core.management.base import BaseCommand
-from portfolio.models import Asset
+from portfolio.models import Asset, Price
 
 
 class Command(BaseCommand):
     help = "Import assets from CoinGecko"
-
     def handle(self, *args, **kwargs):
         url = "https://api.coingecko.com/api/v3/coins/list"
 
@@ -25,5 +25,16 @@ class Command(BaseCommand):
             )
 
         Asset.objects.bulk_create(assets_to_create, ignore_conflicts=True)
+        assets = Asset.objects.filter(type="crypto")
+        prices_to_create = []
+        for asset in assets:
+            prices_to_create.append(
+                Price(
+                    asset=asset,
+                    price = 0,
+                    market_cap = 0
+                )
+            )
+        Price.objects.bulk_create(prices_to_create, ignore_conflicts=True)
 
         self.stdout.write(self.style.SUCCESS("Assets imported successfully"))
