@@ -1,9 +1,36 @@
-from django.forms import ModelForm, forms
+from django.forms import ModelForm
+from django import forms
 from .models import *
 from portfolio.models import Portfolio, PortfolioAsset, Asset
 from django.core.exceptions import ValidationError
 
+class DealForm(ModelForm):
+    class Meta:
+        model = Deal
+        fields = ['type', 'portfolio', 'asset', 'value', 'price_per_unit']
 
+    asset = forms.ModelChoiceField(
+        queryset=Asset.objects.none(),
+        required=True,
+    )
+    def __init__(self, *args, user=None, show_all=False, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if user:
+            self.fields["portfolio"].queryset = Portfolio.objects.filter(user=user)
+
+        if self.data.get("asset"):
+            self.fields["asset"].queryset = Asset.objects.filter(
+                id=self.data.get("asset")
+            )
+
+        if self.instance and self.instance.pk:
+            self.fields['portfolio'].disabled = True
+
+    def clean_portfolio(self):
+        if self.instance and self.instance.pk:
+            return self.instance.portfolio
+        return self.cleaned_data.get('portfolio')
 
 class PaymentForm(ModelForm):
     class Meta:

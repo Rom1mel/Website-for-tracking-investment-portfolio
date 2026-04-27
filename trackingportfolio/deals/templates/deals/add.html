@@ -8,13 +8,59 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Здесь вы можете добавить новые сделки</h1>
-    <a href="?all=1">Показать все активы</a>
-    <a href="?">Показать только популярные криптовалюты</a>
-    <form method="post" action="?{% if show_all %}all=1{% endif %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить сделку</button>
-    </form>
+{% load static %}
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="{% static 'deal/js/deal_form.js' %}"></script>
+
+<h1>Здесь вы можете добавить новые сделки</h1>
+
+<select id="asset-type-filter">
+    <option value="">Все активы</option>
+    <option value="top_crypto">Топ криптовалюты</option>
+    <option value="crypto">Все криптовалюты</option>
+    <option value="stock_rus">Российские акции</option>
+    <option value="top_stock_us">Топ акции США</option>
+    <option value="stock_us">Акции США</option>
+    <option value="etf_us">Фонды США</option>
+</select>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        {{ form.type.label_tag }}
+        {{ form.type }}
+    </p>
+
+    <p>
+        {{ form.portfolio.label_tag }}
+        {{ form.portfolio }}
+    </p>
+
+    <p>
+        {{ form.asset.label_tag }}
+        <select id="id_asset"
+                name="asset"
+                data-search-url="{% url 'asset_search' %}"
+                style="width: 300px;">
+        </select>
+    </p>
+
+    <p>
+        {{ form.value.label_tag }}
+        {{ form.value }}
+    </p>
+
+    <p>
+        {{ form.price_per_unit.label_tag }}
+        {{ form.price_per_unit }}
+    </p>
+
+    <button type="submit">Добавить сделку</button>
+</form>
 </body>
 </html>

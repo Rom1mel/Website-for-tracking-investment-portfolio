@@ -1,13 +1,11 @@
 from django.shortcuts import render, redirect
-from portfolio.forms import DealForm
-from portfolio.models import PortfolioAsset, Portfolio
-from .models import Deal, Payment
+from portfolio.models import PortfolioAsset, Portfolio, Asset
 from deals.services.deal_service import new_deal, update_deal, delete_deal
 from deals.services.payment_service import new_payment, delete_payment_service
 from deals.services.receipt_service import new_receipt, delete_receipt_service
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
+from django.db.models import Q
 from .forms import *
-from django.core.exceptions import ValidationError
+from django.http import JsonResponse
 
 
 
@@ -36,6 +34,35 @@ def add(request):
     else:
         form = DealForm(user = request.user, show_all = show_all)
         return render(request, 'deals/add.html', {'form': form, 'show_all': show_all})
+
+def search(request):
+    query = request.GET.get("q", "")
+    asset_type = request.GET.get("type", "")
+
+    assets = Asset.objects.all()
+
+    if asset_type:
+        assets = assets.filter(type=asset_type)
+
+    if query:
+        assets = assets.filter(
+            Q(name__icontains=query) |
+            Q(ticker__icontains=query)
+        )
+
+    assets = assets.order_by("name")[:30]
+
+    results = []
+
+    for asset in assets:
+        results.append({
+            "id": asset.id,
+            "text": f"{asset.name} ({asset.ticker})",
+        })
+
+    return JsonResponse({
+        "results": results
+    })
 
 def edit(request, pk):
     deal = Deal.objects.get(id = pk,portfolio__user = request.user)
