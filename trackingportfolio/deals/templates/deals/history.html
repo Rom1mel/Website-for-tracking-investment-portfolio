@@ -1,49 +1,174 @@
 {% extends 'home/basic.html' %}
+{% load static %}
 
-{% block main %}
-    <h1>История выших сделок</h1>
-    <a href="{% url 'add' %}">Нажмите, чтобы добавить активы.</a>
-    <select onchange="location = this.value">
-        <option value="/deals/?portfolio_id=all"
-        {% if selected == 'all' %}selected{% endif %}>
-        Все портфели
-        </option>
-        {% for p in portfolios %}
-            <option value="/deals/?portfolio_id={{ p.id }}"
-                {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
-                {{ p.name }}
-            </option>
-        {% endfor %}
-    </select>
-    <a href="{% url 'add_payment' %}">Нажмите, чтобы добавить начисления.</a>
-    <a href="{% url 'add_receipt' %}">Нажмите, чтобы добавить пополнения.</a>
-    {% for deal in deals %}
-        <h3>{{ deal.type }}</h3>
-        <p>{{ deal.asset.name }}</p>
-        <p>{{ deal.value }}</p>
-        <p>{{ deal.price_per_unit }}</p><br>
-        <a href="{% url 'edit' deal.id %}">
-            Изменить
-        </a>
-        <a href="{% url 'delete' deal.id %}">
-            Удалить
-        </a>
-    {% endfor %}
-    {% for payment in payments %}
-        <h3>{{ payment.type }}</h3>
-        <p>{{ payment.asset.name }}</p>
-        <p>{{ payment.value }}</p>
-        <a href="{% url 'delete_payment' payment.id %}">
-            Удалить
-        </a>
-    {% endfor %}
-    {% for receipt in receipts %}
-        <h3>{{ receipt.type }}</h3>
-        <p>{{ receipt.value }}</p>
-        <a href="{% url 'delete_receipt' receipt.id %}">
-            Удалить
-        </a>
-    {% endfor %}
+{% block title %}История сделок | C&D Invest{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'deals/css/history.css' %}">
 {% endblock %}
 
-{% block title %}История{% endblock %}
+{% block content %}
+
+<div class="page-header history-page-header">
+    <div>
+        <h1 class="page-title history-title">Сделки</h1>
+        <div class="page-subtitle">История сделок, начислений и пополнений</div>
+    </div>
+
+    <div class="history-actions">
+        <select onchange="location = this.value" class="history-select">
+            <option value="/deals/?portfolio_id=all" {% if selected == 'all' %}selected{% endif %}>
+                Все портфели
+            </option>
+
+            {% for p in portfolios %}
+                <option value="/deals/?portfolio_id={{ p.id }}" {% if selected == p.id|stringformat:"s" %}selected{% endif %}>
+                    {{ p.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <a href="{% url 'add' %}" class="btn btn-primary btn-small">+ Новая сделка</a>
+        <a href="{% url 'add_payment' %}" class="btn btn-secondary btn-small">+ Начисление</a>
+        <a href="{% url 'add_receipt' %}" class="btn btn-secondary btn-small">+ Пополнение</a>
+    </div>
+</div>
+
+<section class="history-layout">
+
+    <div class="card history-card">
+        <div class="card-header">
+            <div>
+                <h2>История сделок</h2>
+                <p>Все операции покупки и продажи активов</p>
+            </div>
+        </div>
+
+        <div class="deal-list">
+            {% for deal in deals %}
+                <div class="deal-row">
+                    <div class="deal-main">
+                        <div class="deal-icon">
+                            {{ deal.asset.name|first|upper }}
+                        </div>
+
+                        <div>
+                            <div class="deal-name">{{ deal.asset.name }}</div>
+                            <div class="deal-meta">{{ deal.asset.ticker }}</div>
+                        </div>
+                    </div>
+
+                    <div class="deal-cell">
+                        <span>Тип</span>
+                        <strong class="{% if deal.type == 'sell' or deal.type == 'Продажа' %}text-red{% else %}text-green{% endif %}">
+                            {{ deal.type }}
+                        </strong>
+                    </div>
+
+                    <div class="deal-cell">
+                        <span>Количество</span>
+                        <strong>{{ deal.value|floatformat:4 }}</strong>
+                    </div>
+
+                    <div class="deal-cell">
+                        <span>Цена</span>
+                        <strong>{{ deal.price_per_unit|floatformat:2 }} ₽</strong>
+                    </div>
+
+                    <div class="deal-cell">
+                        <span>Портфель</span>
+                        <strong>{{ deal.portfolio.name }}</strong>
+                    </div>
+
+                    <div class="deal-actions">
+                        <a href="{% url 'edit' deal.id %}" class="deal-detail-btn">Изменить</a>
+                        <a href="{% url 'delete' deal.id %}" class="deal-delete-btn">Удалить</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    <h3>Сделок пока нет</h3>
+                    <p>Добавьте первую сделку, чтобы начать историю операций.</p>
+                    <a href="{% url 'add' %}" class="btn btn-primary">+ Добавить сделку</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card operation-card">
+        <div class="card-header">
+            <div>
+                <h2>Начисления</h2>
+                <p>Доходы по активам</p>
+            </div>
+        </div>
+
+        <div class="operation-list">
+            {% for payment in payments %}
+                <div class="operation-row">
+                    <div class="operation-main">
+                        <div class="operation-icon">+</div>
+
+                        <div>
+                            <div class="operation-name">{{ payment.asset.name }}</div>
+                            <div class="operation-meta">{{ payment.type }}</div>
+                        </div>
+                    </div>
+
+                    <div class="operation-cell">
+                        <span>Сумма</span>
+                        <strong class="text-green">+{{ payment.value|floatformat:2 }} ₽</strong>
+                    </div>
+
+                    <div class="operation-actions">
+                        <a href="{% url 'delete_payment' payment.id %}" class="deal-delete-btn">Удалить</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state small-empty">
+                    Начислений пока нет
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="card operation-card">
+        <div class="card-header">
+            <div>
+                <h2>Пополнения / выводы</h2>
+                <p>Движение свободных средств</p>
+            </div>
+        </div>
+
+        <div class="operation-list">
+            {% for receipt in receipts %}
+                <div class="operation-row">
+                    <div class="operation-main">
+                        <div class="operation-icon">₽</div>
+
+                        <div>
+                            <div class="operation-name">{{ receipt.type }}</div>
+                            <div class="operation-meta">Операция с балансом</div>
+                        </div>
+                    </div>
+
+                    <div class="operation-cell">
+                        <span>Сумма</span>
+                        <strong class="text-green">{{ receipt.value|floatformat:2 }} ₽</strong>
+                    </div>
+
+                    <div class="operation-actions">
+                        <a href="{% url 'delete_receipt' receipt.id %}" class="deal-delete-btn">Удалить</a>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="empty-state small-empty">
+                    Пополнений и выводов пока нет
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+</section>
+
+{% endblock %}

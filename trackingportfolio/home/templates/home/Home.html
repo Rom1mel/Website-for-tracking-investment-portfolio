@@ -1,306 +1,49 @@
-{% extends 'home/basic.html' %}
-{% load static %}
+{% extends "home/basic.html" %}
 
-{% block title %}Главная страница | C&D Invest{% endblock %}
+{% block title %}Главная — C&D Invest{% endblock %}
 
-{% block main %}
-<p><a href="{% url 'login' %}">Выйти</a></p>
-<div class="cd-invest-home">
-    <!-- Шапка как на картинке: приветствие и подзаголовок -->
-    <div class="cd-welcome">
-        <h1>Добро пожаловать в C&D Invest</h1>
-        <p>Отслеживайте свои инвестиции в одном месте</p>
-    </div>
+{% block content %}
 
-    <!-- Три карточки: портфель, последние изменения, рыночные новости (стиль в точности как на скриншоте) -->
-    <div class="cd-cards">
-        <!-- Карточка портфеля -->
-        <div class="cd-card">
-            <div class="cd-card-header">
-                <i class="fas fa-chart-line"></i>
-                <h3><a href="{% url 'portfolio' %}">Ваш портфель</a></h3>
-            </div>
-            <div class="cd-card-body">
-                <p><span class="cd-label">Общая стоимость:</span> <span class="cd-value">$1.00</span></p>
-                <p><span class="cd-label">Количество активов:</span> <span class="cd-value">0</span></p>
-            </div>
-            <div class="cd-card-footer">
-                <a href="{% url 'portfolio' %}" class="cd-link">Подробнее →</a>
-            </div>
-        </div>
-
-        <!-- Карточка последних изменений -->
-        <div class="cd-card">
-            <div class="cd-card-header">
-                <i class="fas fa-history"></i>
-                <h3>Последние изменения</h3>
-            </div>
-            <div class="cd-card-body">
-                <div class="cd-empty-state">
-                    <i class="fas fa-receipt"></i>
-                    <p>Нет активных транзакций</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Карточка рыночных новостей -->
-        <div class="cd-card">
-            <div class="cd-card-header">
-                <i class="fas fa-newspaper"></i>
-                <h3>Рыночные новости</h3>
-            </div>
-            <div class="cd-card-body">
-                <div id="cd-news-container" class="cd-news-loading">
-                    <i class="fas fa-spinner fa-pulse"></i> Загрузка новостей...
-                </div>
-            </div>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">
+            Добро пожаловать, {{ request.user.username }} 👋
+        </h1>
+        <div class="page-subtitle">
+            Обзор вашего инвестиционного портфеля
         </div>
     </div>
+
+    <a href="{% url 'add' %}" class="btn btn-primary">
+        + Добавить сделку
+    </a>
 </div>
 
-<style>
-    /* Полное соответствие стилю с вашей фотографии:
-       мягкие карточки, аккуратные тени, нейтральные цвета, никакого windows */
-    .cd-invest-home {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 32px 24px;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
-        background: #f4f7fc;
-        min-height: calc(100vh - 80px);
-    }
+<!-- Карточки -->
+<div class="cards-grid">
 
-    /* Шапка */
-    .cd-welcome {
-        margin-bottom: 36px;
-    }
-    .cd-welcome h1 {
-        font-size: 28px;
-        font-weight: 700;
-        color: #1a2c3e;
-        margin: 0 0 8px 0;
-        letter-spacing: -0.3px;
-        background: linear-gradient(135deg, #1f4662, #2c6288);
-        background-clip: text;
-        -webkit-background-clip: text;
-        color: transparent;
-    }
-    .cd-welcome p {
-        font-size: 16px;
-        color: #5a6f85;
-        margin: 0;
-        font-weight: 400;
-    }
+    <div class="card card-padding">
+        <div class="text-muted">Общая стоимость</div>
+        <div class="card-value">1 452 672 ₽</div>
+        <div class="text-green">+8.32%</div>
+    </div>
 
-    /* Сетка карточек */
-    .cd-cards {
-        display: flex;
-        gap: 28px;
-        flex-wrap: wrap;
-    }
-    .cd-card {
-        flex: 1;
-        min-width: 260px;
-        background: #ffffff;
-        border-radius: 24px;
-        padding: 22px 24px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04), 0 2px 4px rgba(0, 0, 0, 0.02);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        border: 1px solid #eef2f8;
-    }
-    .cd-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.1);
-        border-color: #dce5ef;
-    }
+    <div class="card card-padding">
+        <div class="text-muted">Прибыль / Убыток</div>
+        <div class="card-value text-green">+111 445 ₽</div>
+    </div>
 
-    /* Заголовки внутри карточек */
-    .cd-card-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #eef2f8;
-        padding-bottom: 12px;
-    }
-    .cd-card-header i {
-        font-size: 22px;
-        color: #2c7a4b;
-    }
-    .cd-card-header h3 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: 600;
-        color: #1f4662;
-    }
-    .cd-card-header h3 a {
-        text-decoration: none;
-        color: inherit;
-        transition: color 0.2s;
-    }
-    .cd-card-header h3 a:hover {
-        color: #2c7a4b;
-    }
+    <div class="card card-padding">
+        <div class="text-muted">Доходность (IRR)</div>
+        <div class="card-value">15.78%</div>
+    </div>
 
-    /* Тело карточки */
-    .cd-card-body {
-        margin-bottom: 16px;
-    }
-    .cd-card-body p {
-        margin: 12px 0;
-        display: flex;
-        justify-content: space-between;
-        font-size: 15px;
-        border-bottom: 1px dashed #f0f4f9;
-        padding-bottom: 8px;
-    }
-    .cd-label {
-        color: #6c869e;
-        font-weight: 500;
-    }
-    .cd-value {
-        color: #1e3a5f;
-        font-weight: 700;
-    }
+</div>
 
-    /* Пустое состояние транзакций */
-    .cd-empty-state {
-        text-align: center;
-        padding: 20px 0;
-        color: #8aa3c0;
-    }
-    .cd-empty-state i {
-        font-size: 36px;
-        margin-bottom: 12px;
-        opacity: 0.6;
-    }
-    .cd-empty-state p {
-        margin: 0;
-        font-size: 14px;
-        justify-content: center;
-        border: none;
-    }
+<!-- График -->
+<div class="card card-padding" style="margin-top: 20px;">
+    <h3>Динамика портфеля</h3>
+    <div class="fake-chart"></div>
+</div>
 
-    /* Новости */
-    .cd-news-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 24px 0;
-        color: #6c86a0;
-        font-size: 14px;
-    }
-    .news-item {
-        padding: 12px 0;
-        border-bottom: 1px solid #edf2f7;
-    }
-    .news-item:last-child {
-        border-bottom: none;
-    }
-    .news-title {
-        font-weight: 600;
-        font-size: 14px;
-        color: #1f4662;
-        margin-bottom: 6px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-    .news-badge {
-        background: #eef3fc;
-        font-size: 10px;
-        font-weight: 600;
-        padding: 2px 10px;
-        border-radius: 30px;
-        color: #2c6288;
-    }
-    .news-date {
-        font-size: 11px;
-        color: #8aa7c2;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    /* Футер ссылки */
-    .cd-card-footer {
-        margin-top: 12px;
-        padding-top: 12px;
-        border-top: 1px solid #eef2f8;
-    }
-    .cd-link {
-        font-size: 13px;
-        font-weight: 500;
-        color: #2c7a4b;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        transition: gap 0.2s;
-    }
-    .cd-link:hover {
-        gap: 10px;
-        text-decoration: underline;
-    }
-
-    /* Адаптивность */
-    @media (max-width: 850px) {
-        .cd-cards {
-            gap: 20px;
-        }
-        .cd-invest-home {
-            padding: 20px 16px;
-        }
-        .cd-welcome h1 {
-            font-size: 24px;
-        }
-    }
-    @media (max-width: 700px) {
-        .cd-card {
-            min-width: 100%;
-        }
-    }
-</style>
-
-<!-- Скрипт для имитации загрузки рыночных новостей (как на картинке) -->
-<script>
-    (function() {
-        // Фейковые новости — в стиле инвестиционного дашборда
-        const mockNews = [
-            { title: "ФРС сохранила процентную ставку", badge: "Макро", date: "Сегодня, 15:30" },
-            { title: "Технологический сектор обновляет максимумы", badge: "Акции", date: "Вчера, 18:20" },
-            { title: "Нефть Brent превысила $84 за баррель", badge: "Сырьё", date: "2 дня назад" },
-            { title: "Рубль укрепился к доллару", badge: "Валюта", date: "3 дня назад" },
-            { title: "C&D Invest: новые инструменты аналитики", badge: "Платформа", date: "5 дней назад" }
-        ];
-
-        const newsContainer = document.getElementById('cd-news-container');
-        if (newsContainer) {
-            // Имитация загрузки (как на скриншоте: "Загрузка новостей..." -> данные)
-            setTimeout(() => {
-                let html = '<div style="display: flex; flex-direction: column; gap: 4px;">';
-                mockNews.forEach(news => {
-                    html += `
-                        <div class="news-item">
-                            <div class="news-title">
-                                <span>${news.title}</span>
-                                <span class="news-badge">${news.badge}</span>
-                            </div>
-                            <div class="news-date">
-                                <i class="far fa-calendar-alt"></i> ${news.date}
-                            </div>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                newsContainer.innerHTML = html;
-            }, 800); // небольшая задержка для эффекта загрузки
-        }
-    })();
-</script>
-
-<!-- Подключаем FontAwesome для иконок (если в basic.html ещё нет) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 {% endblock %}

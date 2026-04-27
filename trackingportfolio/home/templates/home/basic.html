@@ -1,21 +1,75 @@
-<!doctype html>
-<html lang="en">
+{% load static %}
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{% block title %}{% endblock %}</title>
-    {% load static %}
-    <link rel="stylesheet" href=" {% static 'home/css/home.css' %}">
+    <title>{% block title %}C&D Invest{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'home/css/base.css' %}">
+
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navigation">
-        <a href="/">Главная</a>
-        <a href="/portfolio/">Портфель</a>
-        <a href="/deals/">История сделок</a>
-    </nav>
-    {% block main %}
-    {% endblock %}
+
+<div class="app-layout">
+
+    <aside class="sidebar">
+        <div class="logo">
+            <div class="logo-symbol">
+                <span class="logo-c">C</span>
+                <span class="logo-d">D</span>
+            </div>
+
+            <div>
+                <div class="logo-title">C&amp;D Invest</div>
+                <div class="logo-subtitle">Centralized &amp; Decentralized</div>
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="{% url 'home' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">
+                Главная
+            </a>
+
+            <a href="{% url 'portfolio' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'portfolio' %}active{% endif %}">
+                Портфели
+            </a>
+
+            <a href="{% url 'history' %}"
+                class="nav-link {% if request.resolver_match.url_name == 'history' %}active{% endif %}">
+                Сделки
+            </a>
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="user-avatar">
+                {% if request.user.is_authenticated %}
+                    {{ request.user.username|first|upper }}
+                {% else %}
+                    Г
+                {% endif %}
+            </div>
+
+            <div class="user-info">
+                {% if request.user.is_authenticated %}
+                    <div class="user-name">{{ request.user.username }}</div>
+                    <div class="user-email">{{ request.user.email|default:"Без email" }}</div>
+                {% else %}
+                    <div class="user-name">Гость</div>
+                    <div class="user-email">Войдите в аккаунт</div>
+                {% endif %}
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+{% block extra_js %}{% endblock %}
+
 </body>
 </html>

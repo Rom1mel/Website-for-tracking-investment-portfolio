@@ -11,7 +11,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='deal',
+            model_name='deals',
             name='type',
             field=models.CharField(choices=[('buy', 'Покупка'), ('sell', 'Продажа')], default='buy', max_length=50),
         ),

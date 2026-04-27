@@ -82,7 +82,7 @@ def delete(request, pk):
         delete_deal(pk)
         return redirect('history')
     else:
-        return render(request, 'deals/delete.html', {'deal': deal})
+        return render(request, 'deals/delete.html', {'deals': deal})
 
 def add_payment(request):
     if request.method == 'POST':
