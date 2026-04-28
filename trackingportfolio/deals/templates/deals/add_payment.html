@@ -1,18 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add Operation</title>
-</head>
-<body>
-    <h1>Здесь вы можете добавить новые начисления</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить начисление</button>
-    </form>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Добавить начисление | C&D Invest{% endblock %}
+{% block form_page_title %}Новое начисление{% endblock %}
+{% block form_page_subtitle %}Зафиксируйте дивиденды, купоны или списания по активу.{% endblock %}
+{% block form_badge %}Начисление{% endblock %}
+{% block form_title %}Параметры начисления{% endblock %}
+{% block form_subtitle %}Начисления отражают денежный поток по конкретному активу внутри портфеля.{% endblock %}
+{% block submit_label %}Добавить начисление{% endblock %}
+
+{% block side_title %}Что попадёт в историю{% endblock %}
+{% block side_text %}Начисления отображаются отдельным блоком на странице истории и позволяют учитывать доходы по активам вместе со сделками.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Тип начисления</strong>
+    <span>Выберите доход или списание, чтобы история корректно показывала направление движения средств.</span>
+</li>
+<li>
+    <strong>Связь с активом</strong>
+    <span>Начисление прикрепляется к конкретному инструменту выбранного портфеля.</span>
+</li>
+<li>
+    <strong>Результат</strong>
+    <span>После сохранения запись сразу появится в ленте начислений на странице истории.</span>
+</li>
+{% endblock %}

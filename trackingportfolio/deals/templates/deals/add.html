@@ -1,66 +1,121 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'deals/form_base.html' %}
 {% load static %}
 
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+{% block title %}Добавить сделку | C&D Invest{% endblock %}
+{% block form_page_title %}Новая сделка{% endblock %}
+{% block form_page_subtitle %}Добавьте покупку или продажу актива в выбранный портфель.{% endblock %}
+{% block form_badge %}Сделка{% endblock %}
+{% block form_title %}Параметры сделки{% endblock %}
+{% block form_subtitle %}Укажите тип операции, актив, объём и цену исполнения.{% endblock %}
+{% block submit_label %}Добавить сделку{% endblock %}
 
+{% block form_extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block form_fields %}
+<div class="form-field">
+    <label class="form-label" for="{{ form.type.id_for_label }}">{{ form.type.label }}</label>
+    {{ form.type }}
+    {% if form.type.errors %}
+        <ul class="form-errors">
+            {% for error in form.type.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="form-field">
+    <label class="form-label" for="{{ form.portfolio.id_for_label }}">{{ form.portfolio.label }}</label>
+    {{ form.portfolio }}
+    {% if form.portfolio.errors %}
+        <ul class="form-errors">
+            {% for error in form.portfolio.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="form-field form-field-full">
+    <div class="form-label-row">
+        <label class="form-label" for="asset-type-filter">Категория актива</label>
+        <span class="form-hint">Фильтр помогает быстрее найти нужный инструмент</span>
+    </div>
+    <select id="asset-type-filter">
+        <option value="">Все активы</option>
+        <option value="top_crypto">Топ криптовалюты</option>
+        <option value="crypto">Все криптовалюты</option>
+        <option value="stock_rus">Российские акции</option>
+        <option value="top_stock_us">Топ акции США</option>
+        <option value="stock_us">Акции США</option>
+        <option value="etf_us">Фонды США</option>
+    </select>
+</div>
+
+<div class="form-field form-field-full">
+    <label class="form-label" for="id_asset">{{ form.asset.label }}</label>
+    <select id="id_asset" name="asset" data-search-url="{% url 'asset_search' %}">
+        {% if form.asset.value %}
+            {% for asset in form.asset.field.queryset %}
+                <option value="{{ asset.pk }}" selected>{{ asset.name }} ({{ asset.ticker }})</option>
+            {% endfor %}
+        {% endif %}
+    </select>
+    {% if form.asset.errors %}
+        <ul class="form-errors">
+            {% for error in form.asset.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="form-field">
+    <label class="form-label" for="{{ form.value.id_for_label }}">{{ form.value.label }}</label>
+    {{ form.value }}
+    {% if form.value.errors %}
+        <ul class="form-errors">
+            {% for error in form.value.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+
+<div class="form-field">
+    <label class="form-label" for="{{ form.price_per_unit.id_for_label }}">{{ form.price_per_unit.label }}</label>
+    {{ form.price_per_unit }}
+    {% if form.price_per_unit.errors %}
+        <ul class="form-errors">
+            {% for error in form.price_per_unit.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block side_title %}Как заполнить{% endblock %}
+{% block side_text %}Сделка влияет на позиции в портфеле, текущую стоимость активов и историю операций. Заполняйте её как точку входа или выхода из позиции.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Тип операции</strong>
+    <span>Покупка увеличивает позицию, продажа сокращает её и влияет на реализованную прибыль.</span>
+</li>
+<li>
+    <strong>Поиск актива</strong>
+    <span>Используйте фильтр категории и поиск по названию или тикеру.</span>
+</li>
+<li>
+    <strong>Цена за единицу</strong>
+    <span>Именно она участвует в расчёте средней цены позиции и финансового результата.</span>
+</li>
+{% endblock %}
+
+{% block form_extra_js %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="{% static 'deal/js/deal_form.js' %}"></script>
-
-<h1>Здесь вы можете добавить новые сделки</h1>
-
-<select id="asset-type-filter">
-    <option value="">Все активы</option>
-    <option value="top_crypto">Топ криптовалюты</option>
-    <option value="crypto">Все криптовалюты</option>
-    <option value="stock_rus">Российские акции</option>
-    <option value="top_stock_us">Топ акции США</option>
-    <option value="stock_us">Акции США</option>
-    <option value="etf_us">Фонды США</option>
-</select>
-
-<form method="post">
-    {% csrf_token %}
-
-    <p>
-        {{ form.type.label_tag }}
-        {{ form.type }}
-    </p>
-
-    <p>
-        {{ form.portfolio.label_tag }}
-        {{ form.portfolio }}
-    </p>
-
-    <p>
-        {{ form.asset.label_tag }}
-        <select id="id_asset"
-                name="asset"
-                data-search-url="{% url 'asset_search' %}"
-                style="width: 300px;">
-        </select>
-    </p>
-
-    <p>
-        {{ form.value.label_tag }}
-        {{ form.value }}
-    </p>
-
-    <p>
-        {{ form.price_per_unit.label_tag }}
-        {{ form.price_per_unit }}
-    </p>
-
-    <button type="submit">Добавить сделку</button>
-</form>
-</body>
-</html>
+<script src="{% static 'deals/js/deal_form.js' %}"></script>
+{% endblock %}

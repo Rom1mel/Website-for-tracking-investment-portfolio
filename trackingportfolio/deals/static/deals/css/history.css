@@ -20,31 +20,47 @@
     -moz-appearance: none;
 
     min-width: 220px;
-    height: 48px;
-    padding: 0 42px 0 16px;
+    height: 52px;
+    padding: 0 44px 0 18px;
 
-    border-radius: 14px;
+    border-radius: 16px;
     border: 1px solid rgba(32, 212, 137, 0.4);
     background:
         linear-gradient(135deg, rgba(32, 212, 137, 0.18), rgba(32, 212, 137, 0.08)),
         #0d2630;
 
     color: #eafff6;
+    font-size: 16px;
     font-weight: 800;
     outline: none;
     cursor: pointer;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    transition: 0.2s ease;
+    color-scheme: dark;
+}
+
+.history-select:hover,
+.history-select:focus {
+    border-color: rgba(32, 212, 137, 0.58);
+    box-shadow:
+        0 0 0 4px rgba(32, 212, 137, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .history-select option {
-    background: #101d2b;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #112334;
     color: #f4f7fb;
+    font-size: 16px;
+    font-weight: 700;
 }
 
 .btn-small {
-    height: 48px;
+    height: 52px;
     padding: 0 17px;
     font-size: 15px;
-    border-radius: 14px;
+    border-radius: 16px;
 }
 
 .btn-secondary {
@@ -66,24 +82,24 @@
 
 .history-card,
 .operation-card {
-    padding: 30px;
+    padding: 26px;
     border-radius: 20px;
 }
 
 .card-header {
-    margin-bottom: 30px;
+    margin-bottom: 24px;
 }
 
 .card-header h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 900;
 }
 
 .card-header p {
-    margin: 8px 0 0;
+    margin: 6px 0 0;
     color: #9ba8ba;
-    font-size: 16px;
+    font-size: 14px;
 }
 
 .deal-list,
@@ -96,9 +112,9 @@
 .operation-row {
     display: grid;
     align-items: center;
-    gap: 28px;
+    gap: 20px;
 
-    padding: 24px 0;
+    padding: 18px 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
@@ -119,14 +135,14 @@
 .operation-main {
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
 }
 
 .deal-icon,
 .operation-icon {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
     background: linear-gradient(135deg, #20d489, #7c4dff);
 
     display: flex;
@@ -134,7 +150,7 @@
     justify-content: center;
 
     color: white;
-    font-size: 22px;
+    font-size: 17px;
     font-weight: 900;
     flex-shrink: 0;
 }
@@ -145,16 +161,16 @@
 
 .deal-name,
 .operation-name {
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 900;
     color: #f4f7fb;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
 }
 
 .deal-meta,
 .operation-meta {
     color: #9ba8ba;
-    font-size: 15px;
+    font-size: 13px;
     text-transform: uppercase;
 }
 
@@ -162,19 +178,19 @@
 .operation-cell {
     display: flex;
     flex-direction: column;
-    gap: 7px;
+    gap: 5px;
 }
 
 .deal-cell span,
 .operation-cell span {
     color: #9ba8ba;
-    font-size: 15px;
+    font-size: 13px;
 }
 
 .deal-cell strong,
 .operation-cell strong {
     color: #f4f7fb;
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 900;
 }
 
@@ -182,7 +198,7 @@
 .operation-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .deal-detail-btn,
@@ -191,11 +207,11 @@
     align-items: center;
     justify-content: center;
 
-    height: 56px;
-    padding: 0 22px;
-    border-radius: 14px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
 
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 900;
     white-space: nowrap;
 }

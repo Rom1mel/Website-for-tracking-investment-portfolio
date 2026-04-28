@@ -1,25 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Удалить начисление</title>
-</head>
-<body>
-    <h2>Вы уверены, что хотите удалить начисление?</h2>
-    <p>Тип: {{ payment.type }}</p>
-    <p>Портфель: {{ payment.portfolio }}</p>
-    <p>По активу: {{ payment.asset }}</p>
-    <p>Сумма: {{ payment.value }}</p>
-    <p>Время: {{ payment.time_stamp }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Да, удалить</button>
-    </form>
-    <a href="{% url 'history' %}">
-        <button type="button">Нет</button>
-    </a>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Удалить начисление | C&D Invest{% endblock %}
+{% block form_page_title %}Удаление начисления{% endblock %}
+{% block form_page_subtitle %}Подтвердите удаление записи о доходе или списании.{% endblock %}
+{% block form_badge_class %}accent-danger{% endblock %}
+{% block form_badge %}Удаление{% endblock %}
+{% block form_title %}Удалить начисление?{% endblock %}
+{% block form_subtitle %}Операция будет удалена из истории доходов по активам.{% endblock %}
+{% block form_lead %}<p class="confirm-message">Проверьте параметры начисления перед подтверждением.</p>{% endblock %}
+
+{% block form_content %}
+<ul class="confirm-list">
+    <li><strong>Тип</strong><span>{{ payment.get_type_display }}</span></li>
+    <li><strong>Портфель</strong><span>{{ payment.portfolio }}</span></li>
+    <li><strong>Актив</strong><span>{{ payment.asset }}</span></li>
+    <li><strong>Сумма</strong><span>{{ payment.value }}</span></li>
+    <li><strong>Время</strong><span>{{ payment.time_stamp }}</span></li>
+</ul>
+
+<form method="post" class="entity-form">
+    {% csrf_token %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">Да, удалить начисление</button>
+        <a href="{% url 'history' %}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block side_title %}После удаления{% endblock %}
+{% block side_text %}Начисление исчезнет из блока доходов на странице истории и больше не будет учитываться как денежный поток по активу.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Доходность</strong>
+    <span>История начислений станет короче, а аналитика по активу изменится.</span>
+</li>
+<li>
+    <strong>Привязка к активу</strong>
+    <span>Запись будет удалена только у выбранного инструмента и портфеля.</span>
+</li>
+<li>
+    <strong>Подтверждение</strong>
+    <span>Если удаление не требуется, вернитесь в историю без сохранения изменений.</span>
+</li>
+{% endblock %}

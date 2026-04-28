@@ -25,6 +25,7 @@ class DealForm(ModelForm):
             )
 
         if self.instance and self.instance.pk:
+            self.fields["asset"].queryset = Asset.objects.filter(pk=self.instance.asset_id)
             self.fields['portfolio'].disabled = True
 
     def clean_portfolio(self):
@@ -55,3 +56,8 @@ class ReceiptForm(ModelForm):
     class Meta:
         model = Receipt
         fields = ['type', 'portfolio', 'value']
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user:
+            self.fields["portfolio"].queryset = Portfolio.objects.filter(user=user)

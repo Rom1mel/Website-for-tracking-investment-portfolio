@@ -1,25 +1,45 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h2>Вы уверены, что хотите удалить сделку?</h2>
-    <p>Тип: {{ deal.type }}</p>
-    <p>Портфель: {{ deal.portfolio }}</p>
-    <p>Актив: {{ deal.asset }}</p>
-    <p>Количество: {{ deal.value }}</p>
-    <p>Время: {{ deal.time_stamp }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Да, удалить</button>
-    </form>
-    <a href="{% url 'history' %}">
-        <button type="button">Нет</button>
-    </a>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Удалить сделку | C&D Invest{% endblock %}
+{% block form_page_title %}Удаление сделки{% endblock %}
+{% block form_page_subtitle %}Подтвердите удаление операции из истории портфеля.{% endblock %}
+{% block form_badge_class %}accent-danger{% endblock %}
+{% block form_badge %}Удаление{% endblock %}
+{% block form_title %}Удалить сделку?{% endblock %}
+{% block form_subtitle %}После подтверждения операция будет исключена из истории и расчётов.{% endblock %}
+{% block form_lead %}<p class="confirm-message">Проверьте данные сделки ниже. Это действие необратимо.</p>{% endblock %}
+
+{% block form_content %}
+<ul class="confirm-list">
+    <li><strong>Тип</strong><span>{{ deal.get_type_display }}</span></li>
+    <li><strong>Портфель</strong><span>{{ deal.portfolio }}</span></li>
+    <li><strong>Актив</strong><span>{{ deal.asset }}</span></li>
+    <li><strong>Количество</strong><span>{{ deal.value }}</span></li>
+    <li><strong>Время</strong><span>{{ deal.time_stamp }}</span></li>
+</ul>
+
+<form method="post" class="entity-form">
+    {% csrf_token %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">Да, удалить сделку</button>
+        <a href="{% url 'history' %}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block side_title %}Последствия удаления{% endblock %}
+{% block side_text %}Удаление изменит историю операций и может повлиять на среднюю цену позиции, баланс и итоговую прибыль портфеля.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>История</strong>
+    <span>Запись исчезнет из общей ленты сделок.</span>
+</li>
+<li>
+    <strong>Расчёты</strong>
+    <span>Пересчитаются позиция по активу и связанные показатели портфеля.</span>
+</li>
+<li>
+    <strong>Необратимость</strong>
+    <span>После подтверждения восстановить операцию можно будет только созданием новой записи.</span>
+</li>
+{% endblock %}

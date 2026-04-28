@@ -1,0 +1,113 @@
+{% extends 'home/basic.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'deals/css/history.css' %}">
+<link rel="stylesheet" href="{% static 'deals/css/forms.css' %}">
+{% block form_extra_css %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+<div class="page-header form-page-header">
+    <div>
+        <h1 class="page-title">{% block form_page_title %}Форма{% endblock %}</h1>
+        <div class="page-subtitle">{% block form_page_subtitle %}Заполните поля и сохраните изменения.{% endblock %}</div>
+    </div>
+
+    <a href="{% block back_url %}{% url 'history' %}{% endblock %}" class="btn btn-secondary btn-small">
+        Назад к истории
+    </a>
+</div>
+
+<section class="form-layout">
+    <div class="card form-card">
+        <div class="card-header form-card-header">
+            <div class="form-badge {% block form_badge_class %}{% endblock %}">
+                {% block form_badge %}Операция{% endblock %}
+            </div>
+            <h2>{% block form_title %}Заполнение формы{% endblock %}</h2>
+            <p>{% block form_subtitle %}Проверьте параметры перед сохранением.{% endblock %}</p>
+        </div>
+
+        {% block form_lead %}
+        <p class="form-lead">Все изменения будут отражены в истории операций и метриках портфеля.</p>
+        {% endblock %}
+
+        {% block form_content %}
+        <form method="post" class="entity-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <ul class="form-non-field-errors">
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% for hidden in form.hidden_fields %}
+                {{ hidden }}
+            {% endfor %}
+
+            <div class="form-grid">
+                {% block form_fields %}
+                {% for field in form.visible_fields %}
+                    <div class="form-field {% if field.errors %}form-field-error{% endif %}">
+                        <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        {{ field }}
+
+                        {% if field.help_text %}
+                            <div class="form-help">{{ field.help_text }}</div>
+                        {% endif %}
+
+                        {% if field.errors %}
+                            <ul class="form-errors">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% endblock %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn {% block submit_btn_class %}btn-primary{% endblock %}">
+                    {% block submit_label %}Сохранить{% endblock %}
+                </button>
+                <a href="{% block cancel_url %}{% url 'history' %}{% endblock %}" class="btn btn-secondary">
+                    Отмена
+                </a>
+            </div>
+        </form>
+        {% endblock %}
+    </div>
+
+    <aside class="card form-side-card">
+        <h3>{% block side_title %}Что важно{% endblock %}</h3>
+        <p>{% block side_text %}Форма повторяет визуальный стиль главных экранов и помогает быстро вносить изменения без перехода в отдельный интерфейс.{% endblock %}</p>
+
+        <ul class="side-list">
+            {% block side_list %}
+            <li>
+                <strong>Портфель</strong>
+                <span>Выберите счёт или стратегию, куда относится операция.</span>
+            </li>
+            <li>
+                <strong>Точность данных</strong>
+                <span>Суммы и количество сразу участвуют в расчёте истории и итоговой доходности.</span>
+            </li>
+            <li>
+                <strong>Проверка перед сохранением</strong>
+                <span>После записи операция появится в общей ленте истории.</span>
+            </li>
+            {% endblock %}
+        </ul>
+    </aside>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+{% block form_extra_js %}{% endblock %}
+{% endblock %}

@@ -1,24 +1,44 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Удалить пополнение</title>
-</head>
-<body>
-    <h2>Вы уверены, что хотите удалить пополнение?</h2>
-    <p>Тип: {{ receipt.type }}</p>
-    <p>Портфель: {{ receipt.portfolio }}</p>
-    <p>Сумма: {{ receipt.value }}</p>
-    <p>Время: {{ receipt.time_stamp }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Да, удалить</button>
-    </form>
-    <a href="{% url 'history' %}">
-        <button type="button">Нет</button>
-    </a>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Удалить платёж | C&D Invest{% endblock %}
+{% block form_page_title %}Удаление платежа{% endblock %}
+{% block form_page_subtitle %}Подтвердите удаление операции пополнения или вывода.{% endblock %}
+{% block form_badge_class %}accent-danger{% endblock %}
+{% block form_badge %}Удаление{% endblock %}
+{% block form_title %}Удалить платёж?{% endblock %}
+{% block form_subtitle %}Операция будет исключена из истории движения свободных средств.{% endblock %}
+{% block form_lead %}<p class="confirm-message">Перед удалением проверьте тип операции, портфель и сумму.</p>{% endblock %}
+
+{% block form_content %}
+<ul class="confirm-list">
+    <li><strong>Тип</strong><span>{{ receipt.get_type_display }}</span></li>
+    <li><strong>Портфель</strong><span>{{ receipt.portfolio }}</span></li>
+    <li><strong>Сумма</strong><span>{{ receipt.value }}</span></li>
+    <li><strong>Время</strong><span>{{ receipt.time_stamp }}</span></li>
+</ul>
+
+<form method="post" class="entity-form">
+    {% csrf_token %}
+    <div class="form-actions">
+        <button type="submit" class="btn btn-danger">Да, удалить платёж</button>
+        <a href="{% url 'history' %}" class="btn btn-secondary">Отмена</a>
+    </div>
+</form>
+{% endblock %}
+
+{% block side_title %}Что изменится{% endblock %}
+{% block side_text %}Удаление влияет на историю движения средств и доступный баланс портфеля, поэтому используйте его только для ошибочно добавленных записей.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Баланс</strong>
+    <span>Показатели свободных средств будут пересчитаны.</span>
+</li>
+<li>
+    <strong>История операций</strong>
+    <span>Запись исчезнет из блока пополнений и выводов.</span>
+</li>
+<li>
+    <strong>Контроль</strong>
+    <span>Если нужна корректировка суммы, безопаснее создать новую корректную запись.</span>
+</li>
+{% endblock %}

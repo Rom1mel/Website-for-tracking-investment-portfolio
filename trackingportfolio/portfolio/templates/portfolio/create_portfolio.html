@@ -1,19 +1,28 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create Portfolio</title>
-</head>
-<body>
-    <h1>Создание портфеля.</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Создать портфель</button>
-    </form>
-    <a href="{% url 'portfolio' %}">Отмена.</a>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Создать портфель | C&D Invest{% endblock %}
+{% block back_url %}{% url 'portfolio' %}{% endblock %}
+{% block cancel_url %}{% url 'portfolio' %}{% endblock %}
+{% block form_page_title %}Новый портфель{% endblock %}
+{% block form_page_subtitle %}Создайте отдельный портфель для стратегии, счёта или инвестиционного сценария.{% endblock %}
+{% block form_badge %}Портфель{% endblock %}
+{% block form_title %}Параметры портфеля{% endblock %}
+{% block form_subtitle %}Укажите название и тип, чтобы затем добавлять в портфель активы, сделки и начисления.{% endblock %}
+{% block submit_label %}Создать портфель{% endblock %}
+
+{% block side_title %}Зачем это нужно{% endblock %}
+{% block side_text %}Портфель выступает контейнером для активов и операций. Отдельные портфели позволяют разделять стратегии, брокерские счета и разные источники капитала.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Название</strong>
+    <span>Выберите понятное имя, чтобы быстро находить портфель в списке и фильтрах.</span>
+</li>
+<li>
+    <strong>Тип</strong>
+    <span>Тип помогает логически отделять инвестиционные сценарии друг от друга.</span>
+</li>
+<li>
+    <strong>Дальше</strong>
+    <span>После создания вы сможете добавлять сделки, начисления и движения средств именно в этот портфель.</span>
+</li>
+{% endblock %}

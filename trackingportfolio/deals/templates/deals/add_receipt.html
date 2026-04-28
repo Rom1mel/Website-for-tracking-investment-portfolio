@@ -1,18 +1,26 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Добавить поплнение</title>
-</head>
-<body>
-    <h1>Здесь вы можете добавить новые пополнения</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Добавить пополнение</button>
-    </form>
-</body>
-</html>
+{% extends 'deals/form_base.html' %}
+
+{% block title %}Добавить платёж | C&D Invest{% endblock %}
+{% block form_page_title %}Новый платёж{% endblock %}
+{% block form_page_subtitle %}Добавьте пополнение или вывод средств по портфелю.{% endblock %}
+{% block form_badge %}Платёж{% endblock %}
+{% block form_title %}Операция с балансом{% endblock %}
+{% block form_subtitle %}Эта форма используется для движения свободных средств без привязки к конкретной сделке.{% endblock %}
+{% block submit_label %}Добавить платёж{% endblock %}
+
+{% block side_title %}Когда использовать{% endblock %}
+{% block side_text %}Пополнения и выводы меняют доступный баланс портфеля и помогают отделить движение денег от рыночных операций по активам.{% endblock %}
+{% block side_list %}
+<li>
+    <strong>Пополнение</strong>
+    <span>Используйте при вводе новых средств в портфель.</span>
+</li>
+<li>
+    <strong>Вывод</strong>
+    <span>Фиксируйте частичный или полный вывод свободного остатка.</span>
+</li>
+<li>
+    <strong>Прозрачная история</strong>
+    <span>Запись появится в блоке пополнений и выводов на странице истории.</span>
+</li>
+{% endblock %}

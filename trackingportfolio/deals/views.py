@@ -67,13 +67,13 @@ def search(request):
 def edit(request, pk):
     deal = Deal.objects.get(id = pk,portfolio__user = request.user)
     if request.method == 'POST':
-        form = DealForm(request.POST, instance=deal)
+        form = DealForm(request.POST, instance=deal, user=request.user)
         if form.is_valid():
             deal = form.save(commit=False)
             update_deal(deal,pk)
         return redirect('history')
     else:
-        form = DealForm(instance = deal)
+        form = DealForm(instance = deal, user=request.user)
         return render(request, 'deals/edit.html', {'form': form})
 
 def delete(request, pk):
@@ -82,7 +82,7 @@ def delete(request, pk):
         delete_deal(pk)
         return redirect('history')
     else:
-        return render(request, 'deals/delete.html', {'deals': deal})
+        return render(request, 'deals/delete.html', {'deal': deal})
 
 def add_payment(request):
     if request.method == 'POST':
@@ -105,13 +105,13 @@ def delete_payment(request, pk):
 
 def add_receipt(request):
     if request.method == 'POST':
-        form = ReceiptForm(request.POST)
+        form = ReceiptForm(request.POST, user=request.user)
         if form.is_valid():
             receipt = form.save(commit=False)
             new_receipt(receipt)
         return redirect('history')
     else:
-        form = ReceiptForm()
+        form = ReceiptForm(user=request.user)
         return render(request, 'deals/add_receipt.html', {'form': form})
 def delete_receipt(request, pk):
     receipt = Receipt.objects.get(id = pk)

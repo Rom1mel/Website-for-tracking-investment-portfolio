@@ -1,0 +1,193 @@
+.detail-page-header {
+    margin-bottom: 22px;
+}
+
+.detail-actions {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.detail-summary {
+    margin-bottom: 22px;
+}
+
+.detail-hero {
+    padding: 28px 30px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    background:
+        radial-gradient(circle at top right, rgba(32, 212, 137, 0.14), transparent 28%),
+        linear-gradient(180deg, rgba(22, 38, 56, 0.96), rgba(13, 26, 41, 0.96));
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+}
+
+.detail-hero-main {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.detail-asset-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #20d489, #7c4dff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 900;
+    flex-shrink: 0;
+}
+
+.detail-asset-name {
+    font-size: 28px;
+    font-weight: 900;
+    color: #f4f7fb;
+    margin-bottom: 6px;
+}
+
+.detail-asset-meta {
+    color: #9ba8ba;
+    font-size: 15px;
+}
+
+.detail-hero-stats {
+    display: flex;
+    align-items: stretch;
+    gap: 14px;
+}
+
+.detail-stat {
+    min-width: 140px;
+    padding: 16px 18px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.detail-stat span {
+    color: #9ba8ba;
+    font-size: 13px;
+}
+
+.detail-stat strong {
+    color: #f4f7fb;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.operation-date {
+    color: #9ba8ba;
+    font-size: 14px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.detail-deal-row,
+.detail-operation-row {
+    padding: 18px 0;
+    gap: 20px;
+}
+
+.detail-main {
+    gap: 0;
+}
+
+.detail-item-name {
+    font-size: 17px;
+    margin-bottom: 4px;
+}
+
+.detail-item-meta {
+    font-size: 13px;
+}
+
+.detail-deal-row .deal-cell,
+.detail-operation-row .operation-cell {
+    gap: 5px;
+}
+
+.detail-deal-row .deal-cell span,
+.detail-operation-row .operation-cell span {
+    font-size: 13px;
+}
+
+.detail-deal-row .deal-cell strong,
+.detail-operation-row .operation-cell strong {
+    font-size: 15px;
+}
+
+.detail-deal-row .deal-detail-btn,
+.detail-deal-row .deal-delete-btn,
+.detail-operation-row .deal-delete-btn {
+    height: 44px;
+    padding: 0 16px;
+    font-size: 15px;
+    border-radius: 12px;
+}
+
+.detail-deal-row .deal-actions,
+.detail-operation-row .operation-actions {
+    gap: 10px;
+}
+
+.detail-operation-row .operation-name,
+.detail-operation-row .operation-meta,
+.detail-deal-row .deal-name,
+.detail-deal-row .deal-meta {
+    text-transform: none;
+}
+
+@media (max-width: 1000px) {
+    .detail-hero {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detail-hero-stats {
+        width: 100%;
+    }
+
+    .detail-stat {
+        flex: 1 1 0;
+    }
+}
+
+@media (max-width: 800px) {
+    .detail-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .detail-actions .btn {
+        width: 100%;
+    }
+
+    .detail-hero {
+        padding: 24px;
+    }
+
+    .detail-hero-main {
+        align-items: flex-start;
+    }
+
+    .detail-hero-stats {
+        flex-direction: column;
+    }
+
+    .operation-date {
+        margin-bottom: 8px;
+    }
+}
