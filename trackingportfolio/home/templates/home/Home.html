@@ -1,49 +1,174 @@
 {% extends "home/basic.html" %}
+{% load static %}
 
-{% block title %}Главная — C&D Invest{% endblock %}
+{% block title %}Главная | C&D Invest{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'home/css/dashboard.css' %}?v=2">
+{% endblock %}
 
 {% block content %}
 
-<div class="page-header">
-    <div>
-        <h1 class="page-title">
-            Добро пожаловать, {{ request.user.username }} 👋
-        </h1>
-        <div class="page-subtitle">
-            Обзор вашего инвестиционного портфеля
+<section class="dashboard-page">
+    <div class="page-header dashboard-header">
+        <div>
+            <h1 class="page-title">Добро пожаловать, {{ username }}!</h1>
+            <div class="page-subtitle">Обзор вашего инвестиционного портфеля</div>
         </div>
+
+        <a href="{% url 'add' %}" class="btn btn-primary dashboard-add-btn">
+            + Добавить сделку
+        </a>
     </div>
 
-    <a href="{% url 'add' %}" class="btn btn-primary">
-        + Добавить сделку
-    </a>
-</div>
+    <section class="dashboard-stats">
+        {% for stat in stats %}
+            <div class="card dashboard-stat-card">
+                <div class="dashboard-stat-label">{{ stat.label }}</div>
+                <div class="dashboard-stat-value {% if stat.accent == 'positive' %}text-green{% elif stat.accent == 'negative' %}text-red{% endif %}">
+                    {% if stat.accent == 'positive' and stat.value > 0 %}+{% endif %}{{ stat.display }}{% if stat.suffix %} {{ stat.suffix }}{% endif %}
+                </div>
+                <div class="dashboard-stat-description">{{ stat.description }}</div>
+            </div>
+        {% endfor %}
+    </section>
 
-<!-- Карточки -->
-<div class="cards-grid">
+    <section class="dashboard-grid">
+        <div class="card dashboard-chart-card">
+            <div class="dashboard-card-header">
+                <div>
+                    <h2>Динамика портфеля</h2>
+                    <p>Секция подготовлена под будущий график стоимости и доходности.</p>
+                </div>
+            </div>
 
-    <div class="card card-padding">
-        <div class="text-muted">Общая стоимость</div>
-        <div class="card-value">1 452 672 ₽</div>
-        <div class="text-green">+8.32%</div>
-    </div>
+            <div class="chart-placeholder">
+                <span>Скоро здесь будет график</span>
+            </div>
+        </div>
 
-    <div class="card card-padding">
-        <div class="text-muted">Прибыль / Убыток</div>
-        <div class="card-value text-green">+111 445 ₽</div>
-    </div>
+        <div class="card dashboard-side-card">
+            <div class="dashboard-card-header">
+                <div>
+                    <h2>Распределение активов</h2>
+                    <p>Текущая структура активов по категориям.</p>
+                </div>
+            </div>
 
-    <div class="card card-padding">
-        <div class="text-muted">Доходность (IRR)</div>
-        <div class="card-value">15.78%</div>
-    </div>
+            {% if has_allocation %}
+                <div class="allocation-card">
+                    <div class="allocation-chart" style="background: {{ allocation_chart }};">
+                        <div class="allocation-chart-center">
+                            <strong>{{ stats.0.value|floatformat:2 }} ₽</strong>
+                            <span>Всего</span>
+                        </div>
+                    </div>
 
-</div>
+                    <div class="allocation-legend">
+                        {% for item in allocation_data %}
+                            <div class="allocation-legend-row">
+                                <div class="allocation-legend-main">
+                                    <span class="allocation-dot" style="background: {{ item.color }};"></span>
+                                    <span>{{ item.label }}</span>
+                                </div>
+                                <strong>{{ item.percentage|floatformat:1 }}%</strong>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="side-placeholder">
+                    <span>Пока недостаточно данных для диаграммы распределения</span>
+                </div>
+            {% endif %}
+        </div>
 
-<!-- График -->
-<div class="card card-padding" style="margin-top: 20px;">
-    <h3>Динамика портфеля</h3>
-    <div class="fake-chart"></div>
-</div>
+        <div class="card dashboard-list-card">
+            <div class="dashboard-card-header dashboard-list-header">
+                <div>
+                    <h2>Последние сделки</h2>
+                    <p>Последние четыре операции по активам.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-activity-list">
+                {% for deal in recent_deals %}
+                    <div class="dashboard-activity-row">
+                        <div class="dashboard-activity-main">
+                            <div class="dashboard-activity-icon">{{ deal.asset.name|first|upper }}</div>
+                            <div>
+                                <div class="dashboard-activity-name">{{ deal.asset.name }}</div>
+                                <div class="dashboard-activity-meta">{{ deal.asset.ticker }} · {{ deal.portfolio.name }}</div>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-activity-type {% if deal.type == 'sell' or deal.type == 'Продажа' %}dashboard-badge-sell{% else %}dashboard-badge-buy{% endif %}">
+                            {{ deal.get_type_display }}
+                        </div>
+
+                        <div class="dashboard-activity-cell">
+                            <span>Количество</span>
+                            <strong>{{ deal.value|floatformat:4 }}</strong>
+                        </div>
+
+                        <div class="dashboard-activity-cell">
+                            <span>Цена</span>
+                            <strong>{{ deal.price_per_unit|floatformat:2 }} ₽</strong>
+                        </div>
+
+                        <div class="dashboard-activity-time">
+                            {{ deal.time_stamp|date:"d.m.Y H:i" }}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="dashboard-empty-state">
+                        <h3>Сделок пока нет</h3>
+                        <p>Когда вы добавите первые операции, здесь появятся последние четыре сделки.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="card dashboard-side-card">
+            <div class="dashboard-card-header">
+                <div>
+                    <h2>Топ портфелей</h2>
+                    <p>Четыре лучших портфеля по доходности.</p>
+                </div>
+            </div>
+
+            {% if top_portfolios %}
+                <div class="portfolio-top-list">
+                    {% for portfolio in top_portfolios %}
+                        <div class="portfolio-top-row">
+                            <div class="portfolio-top-main">
+                                <div class="portfolio-top-name">{{ portfolio.name }}</div>
+                                <div class="portfolio-top-meta">Объём {{ portfolio.volume|floatformat:2 }} ₽</div>
+                            </div>
+
+                            <div class="portfolio-top-metric">
+                                <span>Прибыль</span>
+                                <strong class="{% if portfolio.profit >= 0 %}text-green{% else %}text-red{% endif %}">
+                                    {% if portfolio.profit >= 0 %}+{% endif %}{{ portfolio.profit|floatformat:2 }} ₽
+                                </strong>
+                            </div>
+
+                            <div class="portfolio-top-metric">
+                                <span>Доходность</span>
+                                <strong class="{% if portfolio.profitability >= 0 %}text-green{% else %}text-red{% endif %}">
+                                    {% if portfolio.profitability >= 0 %}+{% endif %}{{ portfolio.profitability|floatformat:2 }}%
+                                </strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="side-placeholder">
+                    <span>Топ портфелей появится после накопления данных по доходности</span>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</section>
 
 {% endblock %}

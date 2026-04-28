@@ -43,23 +43,32 @@
         </nav>
 
         <div class="sidebar-user">
-            <div class="user-avatar">
-                {% if request.user.is_authenticated %}
-                    {{ request.user.username|first|upper }}
-                {% else %}
-                    Г
-                {% endif %}
+            <div class="sidebar-user-main">
+                <div class="user-avatar">
+                    {% if request.user.is_authenticated %}
+                        {{ request.user.username|first|upper }}
+                    {% else %}
+                        Г
+                    {% endif %}
+                </div>
+
+                <div class="user-info">
+                    {% if request.user.is_authenticated %}
+                        <div class="user-name">{{ request.user.username }}</div>
+                        <div class="user-email">{{ request.user.email|default:"Без email" }}</div>
+                    {% else %}
+                        <div class="user-name">Гость</div>
+                        <div class="user-email">Войдите в аккаунт</div>
+                    {% endif %}
+                </div>
             </div>
 
-            <div class="user-info">
-                {% if request.user.is_authenticated %}
-                    <div class="user-name">{{ request.user.username }}</div>
-                    <div class="user-email">{{ request.user.email|default:"Без email" }}</div>
-                {% else %}
-                    <div class="user-name">Гость</div>
-                    <div class="user-email">Войдите в аккаунт</div>
-                {% endif %}
-            </div>
+            {% if request.user.is_authenticated %}
+                <form method="post" action="{% url 'logout' %}" class="logout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="logout-btn">Выйти</button>
+                </form>
+            {% endif %}
         </div>
     </aside>
 
@@ -68,6 +77,74 @@
     </main>
 
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const dropdowns = document.querySelectorAll('[data-custom-dropdown]');
+
+    dropdowns.forEach(function (dropdown) {
+        const button = dropdown.querySelector('[data-dropdown-toggle]');
+        const hiddenInput = dropdown.querySelector('[data-dropdown-native]');
+        const label = dropdown.querySelector('[data-dropdown-label]');
+        const options = dropdown.querySelectorAll('[data-dropdown-option]');
+
+        if (!button || !hiddenInput || !label || !options.length) {
+            return;
+        }
+
+        const closeDropdown = function () {
+            dropdown.classList.remove('open');
+            button.setAttribute('aria-expanded', 'false');
+        };
+
+        button.addEventListener('click', function () {
+            const isOpen = !dropdown.classList.contains('open');
+            document.querySelectorAll('[data-custom-dropdown].open').forEach(function (openedDropdown) {
+                openedDropdown.classList.remove('open');
+                const openedButton = openedDropdown.querySelector('[data-dropdown-toggle]');
+                if (openedButton) {
+                    openedButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+            dropdown.classList.toggle('open', isOpen);
+            button.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        });
+
+        options.forEach(function (option) {
+            option.addEventListener('click', function () {
+                const value = option.dataset.value || '';
+                const optionLabel = option.dataset.label || option.textContent.trim();
+
+                hiddenInput.value = value;
+                label.textContent = optionLabel;
+
+                options.forEach(function (item) {
+                    item.classList.remove('active');
+                });
+                option.classList.add('active');
+
+                closeDropdown();
+
+                if (value) {
+                    window.location = value;
+                }
+            });
+        });
+
+        document.addEventListener('click', function (event) {
+            if (!dropdown.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeDropdown();
+            }
+        });
+    });
+});
+</script>
 
 {% block extra_js %}{% endblock %}
 

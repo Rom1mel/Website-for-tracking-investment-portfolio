@@ -1,18 +1,69 @@
+{% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Reg</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация | C&D Invest</title>
+    <link rel="stylesheet" href="{% static 'home/css/auth.css' %}">
 </head>
 <body>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Зарегистрироваться</button>
-        <a href="{% url 'login' %}">Войти</a>
-    </form>
+<div class="auth-page">
+    <div class="auth-shell">
+        <div class="auth-brand">
+            <div class="auth-logo-symbol">
+                <span class="auth-logo-c">C</span>
+                <span class="auth-logo-d">D</span>
+            </div>
+            <div>
+                <div class="auth-brand-title">C&amp;D Invest</div>
+                <div class="auth-brand-subtitle">Centralized &amp; Decentralized portfolio tracking</div>
+            </div>
+        </div>
+
+        <section class="auth-login-form-wrap">
+            <div class="auth-card auth-login-card">
+                <div class="auth-badge">Регистрация</div>
+                <h1 class="auth-title">Создать аккаунт</h1>
+                <p class="auth-subtitle">Зарегистрируйтесь, чтобы начать вести портфели и сохранять историю своих инвестиционных операций.</p>
+
+                <form method="post" class="auth-form">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <ul class="auth-non-field-errors">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="auth-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="auth-field-help">{{ field.help_text|safe }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="auth-errors">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <button type="submit" class="auth-submit">Зарегистрироваться</button>
+                </form>
+
+                <div class="auth-footer">
+                    <span>Уже есть аккаунт?</span>
+                    <a href="{% url 'login' %}" class="auth-link">Войти</a>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 </body>
 </html>

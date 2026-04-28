@@ -1,19 +1,112 @@
+{% load static %}
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вход | C&D Invest</title>
+    <link rel="stylesheet" href="{% static 'home/css/auth.css' %}">
 </head>
 <body>
-    <form method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Войти</button>
-        <input type="hidden" name="next" value="{{ next }}">
-        <a href="{% url 'register' %}">Регистрация</a>
-    </form>
+<div class="auth-page auth-login-page">
+    <div class="auth-shell auth-login-shell">
+        <div class="auth-brand auth-login-brand">
+            <div class="auth-logo-symbol">
+                <span class="auth-logo-c">C</span>
+                <span class="auth-logo-d">D</span>
+            </div>
+            <div>
+                <div class="auth-brand-title">C&amp;D Invest</div>
+                <div class="auth-brand-subtitle">Centralized &amp; Decentralized portfolio tracking</div>
+            </div>
+        </div>
+
+        <section class="auth-login-form-wrap">
+            <div class="auth-card auth-login-card">
+                <div class="auth-badge">Вход</div>
+                <h1 class="auth-title">Добро пожаловать</h1>
+                <p class="auth-subtitle">Войдите в аккаунт, чтобы открыть портфели, историю операций и аналитику по активам.</p>
+
+                <form method="post" action="{% url 'login' %}" class="auth-form">
+                    {% csrf_token %}
+                    {% if form.non_field_errors %}
+                        <ul class="auth-non-field-errors">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+
+                    {% for field in form %}
+                        <div class="auth-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.help_text %}
+                                <div class="auth-field-help">{{ field.help_text }}</div>
+                            {% endif %}
+                            {% if field.errors %}
+                                <ul class="auth-errors">
+                                    {% for error in field.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+
+                    <input type="hidden" name="next" value="{{ next }}">
+                    <button type="submit" class="auth-submit">Войти</button>
+                </form>
+
+                <div class="auth-footer">
+                    <span>Нет аккаунта?</span>
+                    <a href="{% url 'register' %}" class="auth-link">Создать учётную запись</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="auth-login-info-grid">
+            <aside class="auth-side-card auth-login-info-card">
+                <h2>Что вы получите после входа</h2>
+                <p>Интерфейс остаётся компактным и рабочим: без перегрузки, но с быстрым доступом к основным действиям по портфелю.</p>
+
+                <ul class="auth-side-list">
+                    <li>
+                        <strong>Портфели и активы</strong>
+                        <span>Просматривайте структуру портфеля, позиции по активам и текущие показатели.</span>
+                    </li>
+                    <li>
+                        <strong>История операций</strong>
+                        <span>Фиксируйте сделки, начисления, пополнения и выводы в одном месте.</span>
+                    </li>
+                    <li>
+                        <strong>Детали по активу</strong>
+                        <span>Открывайте отдельную историю по конкретному инструменту внутри выбранного портфеля.</span>
+                    </li>
+                </ul>
+            </aside>
+
+            <div class="auth-info-card auth-login-info-card">
+                <h2>Кратко о возможностях</h2>
+                <p>После входа вы сможете вести инвестиционные портфели в едином интерфейсе: добавлять сделки, учитывать начисления по активам, отслеживать свободные средства и быстро переходить к истории по каждому инструменту.</p>
+
+                <div class="auth-info-grid">
+                    <div class="auth-info-item">
+                        <strong>Контроль структуры</strong>
+                        <span>Смотрите, какие активы находятся в портфеле и как меняется их стоимость.</span>
+                    </div>
+                    <div class="auth-info-item">
+                        <strong>История без хаоса</strong>
+                        <span>Все сделки, начисления и движения средств собраны в одном потоке операций.</span>
+                    </div>
+                    <div class="auth-info-item">
+                        <strong>Быстрый разбор актива</strong>
+                        <span>Из карточки портфеля можно открыть подробную историю по отдельной позиции.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
 </body>
 </html>
