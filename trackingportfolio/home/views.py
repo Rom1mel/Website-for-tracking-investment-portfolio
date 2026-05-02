@@ -26,7 +26,6 @@ def home(request):
         return redirect("login")
 
     portfolios = list(Portfolio.objects.filter(user=request.user).order_by("name"))
-    portfolio_ids = [portfolio.id for portfolio in portfolios]
 
     portfolio_assets = list(
         PortfolioAsset.objects.filter(portfolio__user=request.user).select_related("portfolio", "asset")

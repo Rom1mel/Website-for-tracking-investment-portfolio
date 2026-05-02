@@ -11,11 +11,10 @@ def new_deal(deal, is_save):
     price = deal.price_per_unit
     operation = deal.type
     asset_exsists = PortfolioAsset.objects.filter(portfolio=portfolio, asset=asset).first()
-    error = False
     if asset_exsists:
         if operation == 'buy':
             if count * price > portfolio.balance:
-                raise ValidationError('Недостаточно баланся для покупки')
+                raise ValidationError('Недостаточно баланса для покупки')
             portfolio.balance -= count * price
             asset_exsists.price = (asset_exsists.price * asset_exsists.count + count * price) / (
                         asset_exsists.count + count)
@@ -29,16 +28,14 @@ def new_deal(deal, is_save):
             else:
                 asset_exsists.save()
         else:
-            error = True
             raise ValidationError("Недостаточно актива для продажи")
     else:
         if operation == 'buy':
             if count * price > portfolio.balance:
-                raise ValidationError('Недостаточно баланся для покупки')
+                raise ValidationError('Недостаточно баланса для покупки')
             portfolio.balance -= count * price
             PortfolioAsset.objects.create(portfolio=portfolio, asset=asset, count=count, price=price)
         else:
-            error = True
             raise ValidationError("Недостаточно актива для продажи")
     portfolio.save()
     if is_save:

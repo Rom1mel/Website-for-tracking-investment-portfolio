@@ -25,6 +25,10 @@
         <a href="{% url 'history' %}" class="btn btn-secondary">Отмена</a>
     </div>
 </form>
+
+<div style="font-size:16px; font-weight:700; color:red;">
+    {{ error }}
+</div>
 {% endblock %}
 
 {% block side_title %}Последствия удаления{% endblock %}

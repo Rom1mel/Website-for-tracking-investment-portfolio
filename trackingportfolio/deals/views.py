@@ -24,16 +24,19 @@ def history(request):
     return render(request, 'deals/history.html', data)
 
 def add(request):
-    show_all = request.GET.get('all') == '1'
     if request.method == 'POST':
-        form = DealForm(request.POST, user = request.user, show_all = show_all)
+        form = DealForm(request.POST, user = request.user)
         if form.is_valid():
-            deal = form.save(commit=False)
-            new_deal(deal, True)
-        return redirect('history')
+            try:
+                deal = form.save(commit=False)
+                new_deal(deal, True)
+                return redirect('history')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'deals/add.html', {'form': form})
     else:
-        form = DealForm(user = request.user, show_all = show_all)
-        return render(request, 'deals/add.html', {'form': form, 'show_all': show_all})
+        form = DealForm(user = request.user)
+        return render(request, 'deals/add.html', {'form': form})
 
 def search(request):
     query = request.GET.get("q", "")
@@ -69,9 +72,13 @@ def edit(request, pk):
     if request.method == 'POST':
         form = DealForm(request.POST, instance=deal, user=request.user)
         if form.is_valid():
-            deal = form.save(commit=False)
-            update_deal(deal,pk)
-        return redirect('history')
+            try:
+                deal = form.save(commit=False)
+                update_deal(deal,pk)
+                return redirect('history')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'deals/edit.html', {'form': form})
     else:
         form = DealForm(instance = deal, user=request.user)
         return render(request, 'deals/edit.html', {'form': form})
@@ -79,8 +86,11 @@ def edit(request, pk):
 def delete(request, pk):
     deal = Deal.objects.get(id = pk,portfolio__user = request.user)
     if request.method == 'POST':
-        delete_deal(pk)
-        return redirect('history')
+        try:
+            delete_deal(pk)
+            return redirect('history')
+        except ValidationError as e:
+            return render(request, 'deals/delete.html', {'deal': deal, 'error': e.message})
     else:
         return render(request, 'deals/delete.html', {'deal': deal})
 
@@ -88,9 +98,13 @@ def add_payment(request):
     if request.method == 'POST':
         form = PaymentForm(request.POST, user = request.user)
         if form.is_valid():
-            payment = form.save(commit=False)
-            new_payment(payment)
-        return redirect('history')
+            try:
+                payment = form.save(commit=False)
+                new_payment(payment)
+                return redirect('history')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'deals/add_payment.html', {'form': form})
     else:
         form = PaymentForm(user = request.user)
         return render(request, 'deals/add_payment.html', {'form': form})
@@ -98,8 +112,11 @@ def add_payment(request):
 def delete_payment(request, pk):
     payment = Payment.objects.get(id = pk, portfolio__user = request.user)
     if request.method == 'POST':
-        delete_payment_service(pk)
-        return redirect('history')
+        try:
+            delete_payment_service(pk)
+            return redirect('history')
+        except ValidationError as e:
+            return render(request, 'deals/delete_payment.html', {"payment": payment, "error": e.message})
     else:
         return render(request, 'deals/delete_payment.html', {'payment': payment})
 
@@ -107,16 +124,26 @@ def add_receipt(request):
     if request.method == 'POST':
         form = ReceiptForm(request.POST, user=request.user)
         if form.is_valid():
-            receipt = form.save(commit=False)
-            new_receipt(receipt)
-        return redirect('history')
+            try:
+                receipt = form.save(commit=False)
+                new_receipt(receipt)
+                return redirect('history')
+            except ValidationError as e:
+                form.add_error(None, e.message)
+        return render(request, 'deals/add_receipt.html', {'form': form})
     else:
         form = ReceiptForm(user=request.user)
         return render(request, 'deals/add_receipt.html', {'form': form})
 def delete_receipt(request, pk):
     receipt = Receipt.objects.get(id = pk)
     if request.method == 'POST':
-        delete_receipt_service(pk)
-        return redirect('history')
+        try:
+            delete_receipt_service(pk)
+            return redirect('history')
+        except ValidationError as e:
+            return render(request, 'deals/delete_receipt.html', {
+                'deal': receipt,
+                'error': e.message
+            })
     else:
         return render(request, 'deals/delete_receipt.html', {'receipt': receipt})

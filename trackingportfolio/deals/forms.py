@@ -13,7 +13,7 @@ class DealForm(ModelForm):
         queryset=Asset.objects.none(),
         required=True,
     )
-    def __init__(self, *args, user=None, show_all=False, **kwargs):
+    def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
 
         if user:
