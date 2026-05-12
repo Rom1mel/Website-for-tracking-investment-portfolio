@@ -68,3 +68,4 @@ def delete_deal(pk):
     deal.delete()
     deal_portfolio.save()
     recalculate_portfolio(deal_portfolio)
+    
